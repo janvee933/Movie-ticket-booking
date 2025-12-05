@@ -46,8 +46,8 @@ const Footer = () => {
                 <div className="footer-section">
                     <h3 className="footer-title">Contact Us</h3>
                     <ul className="contact-info">
-                        <li><Mail size={16} /> support@cineticket.com</li>
-                        <li><Phone size={16} /> +1 (555) 123-4567</li>
+                        <li><Mail size={16} /> janvee841301@gmail.com</li>
+                        <li><Phone size={16} /> +91 9708140209</li>
                     </ul>
                 </div>
             </div>
