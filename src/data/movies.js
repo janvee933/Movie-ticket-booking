@@ -6,7 +6,7 @@ export const movies = [
         genre: "Sci-Fi",
         category: "Hollywood",
         rating: 4.8,
-        image: "https://upload.wikimedia.org/wikipedia/en/2/2e/Inception_%282010%29_theatrical_poster.jpg",
+        image: "https://image.tmdb.org/t/p/original/8IB2zC3zYDK9NoHgQD6PJy5Wn0.jpg",
         description: "A thief who steals corporate secrets through the use of dream-sharing technology is given the inverse task of planting an idea into the mind of a C.E.O.",
         trailerUrl: "https://www.youtube.com/embed/YoHD9XEInc0"
     },
@@ -16,7 +16,7 @@ export const movies = [
         genre: "Sci-Fi",
         category: "Hollywood",
         rating: 4.9,
-        image: "https://upload.wikimedia.org/wikipedia/en/b/bc/Interstellar_film_poster.jpg",
+        image: "https://image.tmdb.org/t/p/original/gEU2QniE6E77H6RiAKWHJPed0cQ.jpg",
         description: "A team of explorers travel through a wormhole in space in an attempt to ensure humanity's survival.",
         trailerUrl: "https://www.youtube.com/embed/zSWdZVtXT7E"
     },
@@ -26,7 +26,7 @@ export const movies = [
         genre: "Action",
         category: "Hollywood",
         rating: 5.0,
-        image: "https://upload.wikimedia.org/wikipedia/en/1/1c/The_Dark_Knight_%282008_film%29.jpg",
+        image: "https://image.tmdb.org/t/p/original/qJ2tW6WMUDux911r6m7haRef0WH.jpg",
         description: "When the menace known as the Joker wreaks havoc and chaos on the people of Gotham, Batman must accept one of the greatest psychological and physical tests of his ability to fight injustice.",
         trailerUrl: "https://www.youtube.com/embed/EXeTwQWrcwY"
     },
@@ -36,7 +36,7 @@ export const movies = [
         genre: "Sci-Fi",
         category: "Hollywood",
         rating: 4.7,
-        image: "https://upload.wikimedia.org/wikipedia/en/5/52/Dune_Part_Two_poster.jpg",
+        image: "https://image.tmdb.org/t/p/original/1pdfLvkbY9ohJlCjQH2CZjjYVvJ.jpg",
         description: "Paul Atreides unites with Chani and the Fremen while on a warpath of revenge against the conspirators who destroyed his family.",
         trailerUrl: "https://www.youtube.com/embed/Way9Dexny3w"
     },
@@ -46,7 +46,7 @@ export const movies = [
         genre: "Action",
         category: "Hollywood",
         rating: 4.8,
-        image: "https://upload.wikimedia.org/wikipedia/en/0/0d/Avengers_Endgame_poster.jpg",
+        image: "https://image.tmdb.org/t/p/original/or06FN3Dka5tukK1e9sl16pB3iy.jpg",
         description: "After the devastating events of Infinity War, the universe is in ruins. With the help of remaining allies, the Avengers assemble once more in order to reverse Thanos' actions and restore balance to the universe.",
         trailerUrl: "https://www.youtube.com/embed/TcMBFSGVi1c"
     },
@@ -56,7 +56,7 @@ export const movies = [
         genre: "Drama",
         category: "Hollywood",
         rating: 4.6,
-        image: "https://upload.wikimedia.org/wikipedia/en/4/4a/Oppenheimer_%28film%29.jpg",
+        image: "https://image.tmdb.org/t/p/original/8Gxv8gSFCU0XGDykEGv7zR1n2ua.jpg",
         description: "The story of American scientist J. Robert Oppenheimer and his role in the development of the atomic bomb.",
         trailerUrl: "https://www.youtube.com/embed/uYPbbksJxIg"
     },
@@ -66,7 +66,7 @@ export const movies = [
         genre: "Animation",
         category: "Hollywood",
         rating: 4.9,
-        image: "https://upload.wikimedia.org/wikipedia/en/b/b4/Spider-Man-_Across_the_Spider-Verse_poster.jpg",
+        image: "https://image.tmdb.org/t/p/original/8Vt6mWEReuy4Of61Lnj5Xj704m8.jpg",
         description: "Miles Morales catapults across the Multiverse, where he encounters a team of Spider-People charged with protecting its very existence.",
         trailerUrl: "https://www.youtube.com/embed/cqGjhVJWtEg"
     },
@@ -76,7 +76,7 @@ export const movies = [
         genre: "Action",
         category: "Hollywood",
         rating: 4.5,
-        image: "https://upload.wikimedia.org/wikipedia/en/f/ff/The_Batman_%28film%29_poster.jpg",
+        image: "https://image.tmdb.org/t/p/original/74xTEgt7R36Fpooo50r9T25onhq.jpg",
         description: "When a sadistic serial killer begins murdering key political figures in Gotham, Batman is forced to investigate the city's hidden corruption and question his family's involvement.",
         trailerUrl: "https://www.youtube.com/embed/mqqft2x_Aa4"
     },
@@ -86,7 +86,7 @@ export const movies = [
         genre: "Sci-Fi",
         category: "Hollywood",
         rating: 4.8,
-        image: "https://upload.wikimedia.org/wikipedia/en/5/54/Avatar_The_Way_of_Water_poster.jpg",
+        image: "https://image.tmdb.org/t/p/original/t6HIqrRAclMCA60NsSmeqe9RmNV.jpg",
         description: "Jake Sully lives with his newfound family formed on the extrasolar moon Pandora. Once a familiar threat returns to finish what was previously started, Jake must work with Neytiri and the army of the Na'vi race to protect their home.",
         trailerUrl: "https://www.youtube.com/embed/a8Gx8wiNbsQ"
     },
@@ -96,7 +96,7 @@ export const movies = [
         genre: "Action",
         category: "Hollywood",
         rating: 4.9,
-        image: "https://upload.wikimedia.org/wikipedia/en/1/13/Top_Gun_Maverick_Poster.jpg",
+        image: "https://image.tmdb.org/t/p/original/62HCnUTziyWcpDaBO2i1DX17dbH.jpg",
         description: "After thirty years, Maverick is still pushing the envelope as a top naval aviator, but must confront ghosts of his past when he leads TOP GUN's elite graduates on a mission that demands the ultimate sacrifice from those chosen to fly it.",
         trailerUrl: "https://www.youtube.com/embed/qSqVVswa420"
     },
