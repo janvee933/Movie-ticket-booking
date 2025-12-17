@@ -1,140 +1,58 @@
 import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
-import { ArrowLeft, Calendar, Clock, Loader as LoaderIcon } from 'lucide-react';
-import './Booking.css';
+import { ArrowLeft, Calendar, Clock, Loader as LoaderIcon, RefreshCw } from 'lucide-react';
+
+// ... (existing imports)
 
 const Booking = () => {
-    const { id } = useParams();
-    const navigate = useNavigate();
+    // ... (existing state)
+    const [isRefreshing, setIsRefreshing] = useState(false);
 
-    const [movie, setMovie] = useState(null);
-    const [showtimes, setShowtimes] = useState([]);
-    const [loading, setLoading] = useState(true);
+    // ... (existing useEffect)
 
-    // Selection States
-    const [selectedDate, setSelectedDate] = useState(null);
-    const [selectedShowtime, setSelectedShowtime] = useState(null);
-    const [selectedSeats, setSelectedSeats] = useState([]);
-
-    // Configuration
-    const rows = 8;
-    const cols = 10;
-
-    useEffect(() => {
-        const fetchData = async () => {
-            try {
-                // Fetch Movie
-                const movieRes = await fetch(`http://localhost:5000/api/movies/${id}`);
-                const movieData = await movieRes.json();
-                setMovie(movieData);
-
-                // Fetch Showtimes for this movie
-                const showtimesRes = await fetch(`http://localhost:5000/api/showtimes?movie=${id}`);
-                const showtimesData = await showtimesRes.json();
-                setShowtimes(showtimesData);
-
-                // Set initial date if available
-                if (showtimesData.length > 0) {
-                    const uniqueDates = [...new Set(showtimesData.map(s => new Date(s.startTime).toDateString()))];
-                    if (uniqueDates.length > 0) {
-                        const firstDate = uniqueDates[0];
-                        setSelectedDate(firstDate);
-
-                        // Auto-select first showtime of this date
-                        const showsForDate = showtimesData.filter(s => new Date(s.startTime).toDateString() === firstDate);
-                        if (showsForDate.length > 0) {
-                            setSelectedShowtime(showsForDate[0]);
-                        }
-                    }
-                }
-
-                setLoading(false);
-            } catch (error) {
-                console.error('Error fetching booking data:', error);
-                setLoading(false);
-            }
-        };
-        fetchData();
-    }, [id]);
-
-    // Derived Data
-    const availableDates = [...new Set(showtimes.map(s => new Date(s.startTime).toDateString()))];
-
-    const showtimesForDate = showtimes.filter(s =>
-        new Date(s.startTime).toDateString() === selectedDate
-    );
-
-    // Helpers
-    const getSeatTier = (rowIndex) => {
-        if (rowIndex >= 6) return { name: 'VIP', price: 500, color: 'var(--color-accent)' };
-        if (rowIndex >= 2) return { name: 'Premium', price: 300, color: 'var(--color-primary)' };
-        return { name: 'Standard', price: 200, color: '#6b7280' };
-    };
-
-    const getRowLabel = (index) => String.fromCharCode(65 + index);
-
-    const toggleSeat = (row, col, price, tier) => {
-        const seatLabel = `${getRowLabel(row)}${col + 1}`; // e.g. A1
-        const seatId = seatLabel; // Using label as ID for simplicity match with backend
-
-        if (selectedSeats.find(s => s.id === seatId)) {
-            setSelectedSeats(selectedSeats.filter(s => s.id !== seatId));
-        } else {
-            // Check if max seats reached? (Optional)
-            setSelectedSeats([...selectedSeats, { id: seatId, label: seatLabel, price, tier }]);
-        }
-    };
-
-    const calculateTotal = () => {
-        // Use showtime price if available, else usage default tier price override?
-        // Actually, backend showtime has a base price. 
-        // For this demo, let's stick to the tier-based pricing in UI + Showtime base price?
-        // Prioritizing Tier Price for complex logic, but technically showtime.price should rule.
-        // Let's add seat price + booking fee.
-
-        const seatTotal = selectedSeats.reduce((total, seat) => total + seat.price, 0);
-        const fee = selectedSeats.length * 30;
-        return seatTotal + fee;
-    };
-
-    const handleBooking = async () => {
-        const token = localStorage.getItem('token');
-        if (!token) {
-            alert("Please login to book tickets");
-            navigate('/login');
-            return;
-        }
-
+    const handleRefresh = async () => {
+        if (isRefreshing) return;
+        setIsRefreshing(true);
+        console.log("Refreshing seat data...");
         try {
-            const res = await fetch('http://localhost:5000/api/bookings', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                    'Authorization': `Bearer ${token}`
-                },
-                body: JSON.stringify({
-                    showtimeId: selectedShowtime._id,
-                    seats: selectedSeats.map(s => s.label),
-                    totalAmount: calculateTotal()
-                })
-            });
+            // Re-fetch data
+            const showtimesRes = await fetch(`http://localhost:5000/api/showtimes?movie=${id}`);
+            if (!showtimesRes.ok) throw new Error("Failed to fetch showtimes");
 
-            if (res.ok) {
-                // navigate('/profile'); // Old redirect
-                const bookingData = await res.json();
-                navigate(`/booking-success/${bookingData._id}`);
-            } else {
-                const err = await res.json();
-                alert(`Booking Failed: ${err.message}`);
+            const showtimesData = await showtimesRes.json();
+            console.log("Fresh showtimes data:", showtimesData);
+            setShowtimes(showtimesData);
+
+            // Update selected showtime if exists
+            let statusMessage = "Seats refreshed!";
+            if (selectedShowtime) {
+                const updatedShow = showtimesData.find(s => s._id === selectedShowtime._id);
+                if (updatedShow) {
+                    console.log("Updating current showtime:", updatedShow);
+                    setSelectedShowtime(updatedShow);
+                } else {
+                    console.warn("Selected showtime no longer exists");
+                }
             }
+
+            // Clear selection (Free seats)
+            if (selectedSeats.length > 0) {
+                console.log("Clearing selected seats");
+                setSelectedSeats([]);
+                statusMessage += " Selection cleared.";
+            }
+
+            // Optional: User Feedback
+            // window.alert(statusMessage); // Commented out to avoid spam, using console for now unless user requests visible feedback
         } catch (error) {
-            console.error('Booking error:', error);
-            alert('Booking failed due to network error');
+            console.error("Refresh failed:", error);
+            alert("Failed to refresh seats. Please check your connection.");
+        } finally {
+            setTimeout(() => setIsRefreshing(false), 500); // Min styling delay
         }
     };
 
-    if (loading) return <div className="booking-page"><div className="container" style={{ paddingTop: '100px' }}>Loading...</div></div>;
-    if (!movie) return <div className="booking-page"><div className="container" style={{ paddingTop: '100px' }}>Movie not found</div></div>;
+    // ... (rest of component)
 
     return (
         <div className="booking-page">
@@ -145,7 +63,28 @@ const Booking = () => {
 
                 <div className="booking-grid">
                     <div className="seat-selection">
-                        <h2 className="page-title">Select Seats</h2>
+                        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1rem' }}>
+                            <h2 className="page-title" style={{ margin: 0 }}>Select Seats</h2>
+                            <button
+                                onClick={handleRefresh}
+                                className="btn-refresh"
+                                title="Refresh Availability & Clear Selection"
+                                style={{
+                                    background: 'rgba(255,255,255,0.1)',
+                                    border: 'none',
+                                    color: 'white',
+                                    padding: '8px',
+                                    borderRadius: '50%',
+                                    cursor: 'pointer',
+                                    display: 'flex',
+                                    alignItems: 'center',
+                                    justifyContent: 'center',
+                                    transition: 'all 0.3s ease'
+                                }}
+                            >
+                                <RefreshCw size={20} className={isRefreshing ? 'spin-anim' : ''} />
+                            </button>
+                        </div>
 
                         {/* Showtimes must be selected first */}
                         <div style={{ marginBottom: '2rem', padding: '1rem', background: 'rgba(255,255,255,0.05)', borderRadius: '12px' }}>

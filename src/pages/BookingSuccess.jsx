@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
-import { Check, Calendar, Clock, MapPin, Download, Home } from 'lucide-react';
+import { Check, Calendar, Clock, MapPin, Download, Home, Film } from 'lucide-react';
 import html2canvas from 'html2canvas';
 import './BookingSuccess.css';
 
@@ -61,69 +61,96 @@ const BookingSuccess = () => {
     return (
         <div className="success-page">
             <div className="success-container">
-                <div id="ticket-card" className="ticket-card">
-                    <div className="ticket-header">
-                        <div className="success-icon">
-                            <Check size={32} />
+                <div id="ticket-card" className="ticket-wrapper">
+                    <div className="ticket-main">
+                        {/* Branding Header */}
+                        <div style={{ padding: '1rem', borderBottom: '1px solid #333', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '0.5rem', background: '#000' }}>
+                            <div style={{ background: '#e50914', padding: '4px', borderRadius: '4px', display: 'flex' }}><Film size={16} color="white" /></div>
+                            <span style={{ fontWeight: '800', fontSize: '1rem', color: '#e50914', letterSpacing: '0.5px' }}>Cine<span style={{ color: '#fff' }}>Ticket</span></span>
                         </div>
-                        <h1>Booking Confirmed!</h1>
-                        <p>Your ticket has been booked successfully</p>
+
+                        <div className="ticket-header">
+                            {movie?.image && <img src={movie.image} alt={movie.title} className="ticket-movie-poster" />}
+                            <h2 className="ticket-movie-title">{movie?.title}</h2>
+                            <p className="ticket-movie-genre">{movie?.genre} • {movie?.language || 'English'}</p>
+                        </div>
+
+                        <div className="ticket-divider"></div>
+
+                        <div className="ticket-body">
+                            {/* User Details */}
+                            <div className="ticket-row" style={{ background: '#111', padding: '0.75rem', borderRadius: '8px', marginBottom: '1.5rem', border: '1px solid #333' }}>
+                                <div>
+                                    <div className="ticket-label">Booked By</div>
+                                    <div className="ticket-value" style={{ fontSize: '0.9rem', color: '#fff' }}>{booking.user?.name || 'Guest User'}</div>
+                                    <small style={{ color: '#9ca3af', fontSize: '0.75rem' }}>{booking.user?.email}</small>
+                                </div>
+                                <div style={{ textAlign: 'right' }}>
+                                    <div className="ticket-label">Status</div>
+                                    <div className="ticket-value" style={{ color: '#4ade80', fontSize: '0.9rem' }}>Confirmed</div>
+                                </div>
+                            </div>
+
+                            <div className="ticket-row">
+                                <div>
+                                    <div className="ticket-label">Theater</div>
+                                    <div className="ticket-value">{theater?.name}</div>
+                                    <small style={{ color: '#666' }}>{theater?.location || 'City Center'}</small>
+                                </div>
+                                <div style={{ textAlign: 'right' }}>
+                                    <div className="ticket-label">Screen</div>
+                                    <div className="ticket-value">{showtime?.screen || '1'}</div>
+                                </div>
+                            </div>
+
+                            <div className="ticket-row">
+                                <div>
+                                    <div className="ticket-label">Date</div>
+                                    <div className="ticket-value">{new Date(showtime?.startTime).toLocaleDateString()}</div>
+                                </div>
+                                <div style={{ textAlign: 'right' }}>
+                                    <div className="ticket-label">Time</div>
+                                    <div className="ticket-value">{new Date(showtime?.startTime).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}</div>
+                                </div>
+                            </div>
+
+                            <div className="ticket-label" style={{ textAlign: 'center', marginBottom: '0.5rem' }}>Seats</div>
+                            <div className="seat-grid">
+                                {booking.seats.map(seat => (
+                                    <div key={seat} className="seat-box">{seat}</div>
+                                ))}
+                            </div>
+                        </div>
+
+                        <div className="ticket-footer">
+                            <img
+                                src={`https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=${booking._id}`}
+                                alt="QR Code"
+                                className="qr-code"
+                            />
+                            <div className="ticket-id">ID: {booking._id.toUpperCase().slice(-8)}</div>
+                            <div style={{ fontSize: '0.8rem', color: '#666', marginBottom: '0.5rem' }}>
+                                Booked on: {new Date(booking.createdAt).toLocaleString()}
+                            </div>
+                            <div className="total-amount">Paid: ₹{booking.totalAmount}</div>
+                            <div style={{ fontSize: '0.6rem', color: '#999', marginTop: '1rem', fontStyle: 'italic' }}>
+                                * This is an electronically generated receipt. No signature required.
+                                <br />Shown at the cinema entrance for entry.
+                            </div>
+                        </div>
                     </div>
+                </div>
 
-                    <div className="ticket-content">
-                        <div className="movie-info">
-                            {movie?.image && <img src={movie.image} alt={movie.title} className="ticket-poster" />}
-                            <div className="movie-details">
-                                <h2>{movie?.title}</h2>
-                                <p>{movie?.genre}</p>
-                                <p>{movie?.duration || '120'} mins • {movie?.language || 'English'}</p>
-                            </div>
-                        </div>
-
-                        <div className="ticket-grid">
-                            <div className="ticket-item">
-                                <span className="ticket-label">Theater</span>
-                                <span className="ticket-value">{theater?.name}</span>
-                            </div>
-                            <div className="ticket-item">
-                                <span className="ticket-label">Screen</span>
-                                <span className="ticket-value">Screen {showtime?.screen}</span>
-                            </div>
-                            <div className="ticket-item">
-                                <span className="ticket-label">Date</span>
-                                <span className="ticket-value">{new Date(showtime?.startTime).toLocaleDateString()}</span>
-                            </div>
-                            <div className="ticket-item">
-                                <span className="ticket-label">Time</span>
-                                <span className="ticket-value">{new Date(showtime?.startTime).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}</span>
-                            </div>
-                            <div className="ticket-item" style={{ gridColumn: 'span 2' }}>
-                                <span className="ticket-label">Seats</span>
-                                <span className="ticket-value seats-value">{booking.seats.join(', ')}</span>
-                            </div>
-                            <div className="ticket-item">
-                                <span className="ticket-label">Booking ID</span>
-                                <span className="ticket-value mono" style={{ fontSize: '0.9rem' }}>{booking._id.slice(-8).toUpperCase()}</span>
-                            </div>
-                            <div className="ticket-item">
-                                <span className="ticket-label">Amount Paid</span>
-                                <span className="ticket-value">₹{booking.totalAmount}</span>
-                            </div>
-                        </div>
-
-                        <div className="ticket-footer hide-on-download">
-                            <button className="btn btn-outline" onClick={() => navigate('/home')}>
-                                <Home size={18} style={{ marginRight: '0.5rem' }} /> Home
-                            </button>
-                            {/* Download feature requires html2canvas installed, avoiding import error if not present. 
-                                For now, simpler button. */}
-                            <button className="btn btn-primary" onClick={() => window.print()}>
-                                <Download size={18} style={{ marginRight: '0.5rem' }} /> Print / Save
-                            </button>
-                        </div>
-
-                        <div className="barcode"></div>
-                    </div>
+                <div className="action-buttons hide-on-download">
+                    <button className="btn btn-outline" onClick={() => navigate('/home')}>
+                        <Home size={18} style={{ marginRight: '0.5rem' }} /> Home
+                    </button>
+                    <button className="btn btn-primary" onClick={handleDownload} style={{ display: 'flex', alignItems: 'center' }}>
+                        <Download size={18} style={{ marginRight: '0.5rem' }} /> Download Ticket
+                    </button>
+                    <button className="btn btn-ghost" style={{ color: 'white' }} onClick={() => window.print()}>
+                        Print
+                    </button>
                 </div>
             </div>
         </div>

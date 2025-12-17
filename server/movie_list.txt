@@ -1,0 +1,45 @@
+--- Movie List & Poster Status ---
+[OK] Inception || https://image.tmdb.org/t/p/original/8IB2zC3zYDK9NoHgQD6PJy5Wn0.jpg
+[OK] Interstellar || https://image.tmdb.org/t/p/original/gEU2QniE6E77H6RiAKWHJPed0cQ.jpg
+[OK] The Dark Knight || https://image.tmdb.org/t/p/original/qJ2tW6WMUDux911r6m7haRef0WH.jpg
+[OK] Dune: Part Two || https://upload.wikimedia.org/wikipedia/en/5/52/Dune_Part_Two.jpg
+[OK] Avengers: Endgame || https://image.tmdb.org/t/p/original/or06FN3Dka5tukK1e9sl16pB3iy.jpg
+[OK] Oppenheimer || https://upload.wikimedia.org/wikipedia/en/4/4a/Oppenheimer_%28film%29.jpg
+[OK] Spider-Man: Across the Spider-Verse || https://image.tmdb.org/t/p/original/8Vt6mWEReuy4Of61Lnj5Xj704m8.jpg
+[OK] The Batman || https://image.tmdb.org/t/p/original/74xTEgt7R36Fpooo50r9T25onhq.jpg
+[OK] Avatar: The Way of Water || https://image.tmdb.org/t/p/original/t6HIqrRAclMCA60NsSmeqe9RmNV.jpg
+[OK] Top Gun: Maverick || https://upload.wikimedia.org/wikipedia/en/2/22/Top_Gun_Maverick_poster.jpg
+[OK] Jawan || https://upload.wikimedia.org/wikipedia/en/3/39/Jawan_film_poster.jpg
+[OK] 3 Idiots || https://upload.wikimedia.org/wikipedia/en/d/df/3_idiots_poster.jpg
+[OK] Dangal || https://upload.wikimedia.org/wikipedia/en/9/99/Dangal_Poster.jpg
+[OK] Animal || https://upload.wikimedia.org/wikipedia/en/9/90/Animal_%282023_film%29_poster.jpg
+[OK] Tiger 3 || https://upload.wikimedia.org/wikipedia/en/d/d9/Tiger_3_poster.jpg
+[OK] Dunki || https://upload.wikimedia.org/wikipedia/en/d/d1/Dunki_poster.jpg
+[OK] Ek Tha Tiger || https://image.tmdb.org/t/p/original/btgkNgL5uVKeMFuXnO5xYHsJx3B.jpg
+[OK] Om Shanti Om || https://www.themoviedb.org/t/p/original/2mnqkI871E0thcIwsB6K6Bhemb2.jpg
+[OK] Vivah || https://images.hive.blog/DQmXiCNYVuR5jvLh8pMcptTGnTbPhrdg6VaTirGrVFTSHwQ/images%20(17).jpg
+[OK] Pathaan || https://upload.wikimedia.org/wikipedia/en/c/c3/Pathaan_film_poster.jpg
+[OK] Gadar 2 || https://upload.wikimedia.org/wikipedia/en/6/69/Gadar_2_film_poster.jpg
+[OK] RRR || https://upload.wikimedia.org/wikipedia/en/d/d7/RRR_Poster.jpg
+[OK] Baahubali 2: The Conclusion || https://tse2.mm.bing.net/th/id/OIP.e0WLWqCIQSrRQvoRwnLpJwHaK-?cb=ucfimg2&ucfimg=1&rs=1&pid=ImgDetMain&o=7&rm=3
+[OK] Pushpa: The Rise || https://upload.wikimedia.org/wikipedia/en/7/75/Pushpa_-_The_Rise_%282021_film%29.jpg
+[OK] Baahubali: The Beginning || https://upload.wikimedia.org/wikipedia/en/5/51/Baahubali_The_Beginning_poster.jpg
+[OK] K.G.F: Chapter 2 || https://upload.wikimedia.org/wikipedia/en/d/d0/K.G.F_Chapter_2.jpg
+[OK] Leo || https://upload.wikimedia.org/wikipedia/en/7/75/Leo_%282023_Indian_film%29.jpg
+[OK] 12th Fail || https://upload.wikimedia.org/wikipedia/en/f/f2/12th_Fail_poster.jpeg
+[OK] Salaar: Part 1 - Ceasefire || https://upload.wikimedia.org/wikipedia/en/a/a2/Salaar_Part_1_%E2%80%93_Ceasefire.jpg
+[OK] Spider-Man: No Way Home || https://upload.wikimedia.org/wikipedia/en/0/00/Spider-Man_No_Way_Home_poster.jpg
+[OK] Barbie || https://upload.wikimedia.org/wikipedia/en/0/0b/Barbie_2023_poster.jpg
+[OK] Deadpool & Wolverine || https://upload.wikimedia.org/wikipedia/en/thumb/4/4c/Deadpool_%26_Wolverine_poster.jpg/220px-Deadpool_%26_Wolverine_poster.jpg
+[OK] Inside Out 2 || https://upload.wikimedia.org/wikipedia/en/f/f7/Inside_Out_2_poster.jpg
+[OK] Godzilla x Kong: The New Empire || https://upload.wikimedia.org/wikipedia/en/b/be/Godzilla_x_kong_the_new_empire_poster.jpg
+[OK] Stree 2 || https://upload.wikimedia.org/wikipedia/en/1/1a/Stree_2_poster.jpg
+[OK] Shershaah || https://upload.wikimedia.org/wikipedia/en/9/93/Shershaah_film_poster.jpg
+[OK] Drishyam 2 || https://upload.wikimedia.org/wikipedia/en/d/dc/Drishyam_2_2022_film_poster.jpg
+[OK] Kantara || https://upload.wikimedia.org/wikipedia/en/8/84/Kantara_poster.jpeg
+[OK] Kalki 2898 AD || https://upload.wikimedia.org/wikipedia/en/4/4c/Kalki_2898_AD.jpg
+[OK] Hanu-Man || https://upload.wikimedia.org/wikipedia/en/a/a2/Hanu_Man_poster.jpg
+[OK] Devara: Part 1 || https://upload.wikimedia.org/wikipedia/en/5/50/Devara_Part_1_poster.jpg
+
+Total Movies: 41
+Total Missing info: 0
