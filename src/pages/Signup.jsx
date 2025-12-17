@@ -1,8 +1,6 @@
 import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { Film } from 'lucide-react';
-import { createUserWithEmailAndPassword } from 'firebase/auth';
-import { auth } from '../firebase';
 import './Login.css'; // Reusing Login styles for consistency
 
 const Signup = () => {
@@ -12,6 +10,7 @@ const Signup = () => {
     const [password, setPassword] = useState('');
     const [confirmPassword, setConfirmPassword] = useState('');
     const [error, setError] = useState('');
+    const [loading, setLoading] = useState(false);
 
     const handleSubmit = async (e) => {
         e.preventDefault();
@@ -22,12 +21,29 @@ const Signup = () => {
             return;
         }
 
+        setLoading(true);
         try {
-            await createUserWithEmailAndPassword(auth, email, password);
-            // Optionally update profile with name here
-            navigate('/');
+            const response = await fetch('http://localhost:5000/api/auth/signup', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ name, email, password }),
+            });
+
+            const data = await response.json();
+
+            if (!response.ok) {
+                throw new Error(data.message || 'Signup failed');
+            }
+
+            // Signup successful
+            // You might want to auto-login here or redirect to login
+            navigate('/login');
         } catch (err) {
-            setError(err.message.replace('Firebase: ', ''));
+            setError(err.message);
+        } finally {
+            setLoading(false);
         }
     };
 
@@ -89,8 +105,8 @@ const Signup = () => {
                         />
                     </div>
 
-                    <button type="submit" className="btn btn-primary btn-block">
-                        Sign Up
+                    <button type="submit" className="btn btn-primary btn-block" disabled={loading}>
+                        {loading ? 'Creating Account...' : 'Sign Up'}
                     </button>
                 </form>
 

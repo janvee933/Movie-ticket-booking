@@ -1,31 +1,52 @@
 import React, { useState, useEffect } from 'react';
 import { Link, useSearchParams } from 'react-router-dom';
-import { Star, Filter, Globe, Search } from 'lucide-react';
-import { movies } from '../data/movies';
+import { Search, Filter, Globe, Star } from 'lucide-react';
 import './Movies.css';
 
 const Movies = () => {
     const [searchParams, setSearchParams] = useSearchParams();
     const initialSearch = searchParams.get('search') || '';
 
+    const [movies, setMovies] = useState([]);
+    const [loading, setLoading] = useState(true);
+
+    const [searchQuery, setSearchQuery] = useState(initialSearch);
     const [selectedCategory, setSelectedCategory] = useState('All');
     const [selectedGenre, setSelectedGenre] = useState('All');
-    const [searchQuery, setSearchQuery] = useState(initialSearch);
 
     const categories = ['All', 'Hollywood', 'Bollywood', 'Tollywood'];
-    const genres = ['All', 'Action', 'Sci-Fi', 'Drama', 'Comedy', 'Animation'];
+    const genres = ['All', 'Action', 'Sci-Fi', 'Drama', 'Comedy', 'Animation', 'Thriller', 'Romance'];
+
+    useEffect(() => {
+        const fetchMovies = async () => {
+            try {
+                const res = await fetch('http://localhost:5000/api/movies');
+                const data = await res.json();
+                setMovies(data);
+                setLoading(false);
+            } catch (error) {
+                console.error('Error fetching movies:', error);
+                setLoading(false);
+            }
+        };
+        fetchMovies();
+    }, []);
 
     // Update local search state when URL param changes
     useEffect(() => {
+        // eslint-disable-next-line react-hooks/set-state-in-effect
         setSearchQuery(searchParams.get('search') || '');
     }, [searchParams]);
 
     const filteredMovies = movies.filter(movie => {
         const categoryMatch = selectedCategory === 'All' || movie.category === selectedCategory;
-        const genreMatch = selectedGenre === 'All' || movie.genre === selectedGenre;
+        // Genre check: simpler "includes" check since genres can be comma separated or single word
+        const genreMatch = selectedGenre === 'All' || (movie.genre && movie.genre.includes(selectedGenre));
         const searchMatch = movie.title.toLowerCase().includes(searchQuery.toLowerCase());
         return categoryMatch && genreMatch && searchMatch;
     });
+
+    if (loading) return <div className="movies-page" style={{ paddingTop: '100px', textAlign: 'center' }}>Loading...</div>;
 
     return (
         <div className="movies-page">
@@ -81,7 +102,7 @@ const Movies = () => {
 
                 <div className="movies-grid">
                     {filteredMovies.map(movie => (
-                        <Link to={`/movie/${movie.id}`} key={movie.id} className="movie-card">
+                        <Link to={`/movie/${movie._id}`} key={movie._id} className="movie-card">
                             <div className="card-image-wrapper">
                                 <img src={movie.image} alt={movie.title} className="card-image" />
                                 <div className="card-overlay">

@@ -1,0 +1,46 @@
+import mongoose from 'mongoose';
+
+const movieSchema = new mongoose.Schema({
+    title: {
+        type: String,
+        required: true,
+        trim: true
+    },
+    genre: {
+        type: String,
+        required: true
+    },
+    category: {
+        type: String,
+        required: true // e.g., 'Hollywood', 'Bollywood'
+    },
+    rating: {
+        type: Number,
+        default: 0
+    },
+    image: {
+        type: String,
+        required: true
+    },
+    description: {
+        type: String,
+        required: true
+    },
+    trailerUrl: {
+        type: String
+    },
+    duration: {
+        type: Number, // in minutes
+        default: 120
+    },
+    releaseDate: {
+        type: Date
+    },
+    cast: [{
+        name: String,
+        role: String,
+        image: String
+    }]
+}, { timestamps: true });
+
+export default mongoose.model('Movie', movieSchema);

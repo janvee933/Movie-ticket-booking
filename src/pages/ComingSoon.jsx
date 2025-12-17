@@ -26,7 +26,7 @@ const ComingSoon = ({ title }) => {
             <p style={{ maxWidth: '400px', marginBottom: '2rem' }}>
                 We are working hard to bring you this feature. Stay tuned for updates!
             </p>
-            <Link to="/" className="btn btn-primary">
+            <Link to="/home" className="btn btn-primary">
                 Back to Home
             </Link>
         </div>

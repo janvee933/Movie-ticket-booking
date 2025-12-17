@@ -10,7 +10,17 @@ import Login from './pages/Login';
 import Signup from './pages/Signup';
 import Cinemas from './pages/Cinemas';
 import ComingSoon from './pages/ComingSoon';
+import Profile from './pages/Profile';
 import Loader from './components/Loader';
+
+import MainLayout from './components/MainLayout';
+import AdminLayout from './components/AdminLayout';
+import AdminRoute from './components/AdminRoute';
+import Dashboard from './pages/admin/Dashboard';
+import AdminMovies from './pages/admin/AdminMovies';
+import AdminTheaters from './pages/admin/AdminTheaters';
+import AdminShowtimes from './pages/admin/AdminShowtimes';
+import AdminBookings from './pages/admin/AdminBookings';
 
 function App() {
   const [loading, setLoading] = React.useState(true);
@@ -27,23 +37,35 @@ function App() {
   }
 
   return (
-    <div className="app">
-      <Navbar />
-      <main>
-        <Routes>
-          <Route path="/" element={<Home />} />
-          <Route path="/movies" element={<Movies />} />
-          <Route path="/movie/:id" element={<MovieDetails />} />
-          <Route path="/booking/:id" element={<Booking />} />
-          <Route path="/login" element={<Login />} />
-          <Route path="/signup" element={<Signup />} />
-          <Route path="/cinemas" element={<Cinemas />} />
-          <Route path="/offers" element={<ComingSoon title="Offers" />} />
-          <Route path="/loading" element={<Loader />} />
-        </Routes>
-      </main>
-      <Footer />
-    </div>
+    <Routes>
+      {/* Public/Auth Routes (No Navbar/Footer) */}
+      <Route path="/" element={<Login />} />
+      <Route path="/login" element={<Login />} />
+      <Route path="/signup" element={<Signup />} />
+
+      {/* Protected/Main App Routes (With Navbar/Footer) */}
+      <Route element={<MainLayout />}>
+        <Route path="/home" element={<Home />} />
+        <Route path="/movies" element={<Movies />} />
+        <Route path="/movie/:id" element={<MovieDetails />} />
+        <Route path="/booking/:id" element={<Booking />} />
+        <Route path="/cinemas" element={<Cinemas />} />
+        <Route path="/offers" element={<ComingSoon title="Offers" />} />
+        <Route path="/profile" element={<Profile />} />
+        <Route path="/loading" element={<Loader />} />
+      </Route>
+
+      {/* Admin Routes */}
+      <Route element={<AdminRoute />}>
+        <Route path="/admin" element={<AdminLayout />}>
+          <Route index element={<Dashboard />} />
+          <Route path="movies" element={<AdminMovies />} />
+          <Route path="theaters" element={<AdminTheaters />} />
+          <Route path="showtimes" element={<AdminShowtimes />} />
+          <Route path="bookings" element={<AdminBookings />} />
+        </Route>
+      </Route>
+    </Routes>
   );
 }
 

@@ -1,58 +1,130 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
-import { ArrowLeft, Calendar, Clock, Info } from 'lucide-react';
-import { movies } from '../data/movies';
+import { ArrowLeft, Calendar, Clock, Loader as LoaderIcon } from 'lucide-react';
 import './Booking.css';
 
 const Booking = () => {
     const { id } = useParams();
     const navigate = useNavigate();
-    const movie = movies.find(m => m.id === parseInt(id));
 
-    const [selectedDate, setSelectedDate] = useState(0);
-    const [selectedTime, setSelectedTime] = useState(0);
+    const [movie, setMovie] = useState(null);
+    const [showtimes, setShowtimes] = useState([]);
+    const [loading, setLoading] = useState(true);
+
+    // Selection States
+    const [selectedDate, setSelectedDate] = useState(null);
+    const [selectedShowtime, setSelectedShowtime] = useState(null);
     const [selectedSeats, setSelectedSeats] = useState([]);
 
-    // Mock data for dates and times
-    const dates = ['Today', 'Tomorrow', 'Fri, 8 Dec'];
-    const times = ['10:30 AM', '1:15 PM', '4:30 PM', '7:45 PM', '10:00 PM'];
-
-    // Seat Configuration
+    // Configuration
     const rows = 8;
     const cols = 10;
 
-    // Define tiers
+    useEffect(() => {
+        const fetchData = async () => {
+            try {
+                // Fetch Movie
+                const movieRes = await fetch(`http://localhost:5000/api/movies/${id}`);
+                const movieData = await movieRes.json();
+                setMovie(movieData);
+
+                // Fetch Showtimes for this movie
+                const showtimesRes = await fetch(`http://localhost:5000/api/showtimes?movie=${id}`);
+                const showtimesData = await showtimesRes.json();
+                setShowtimes(showtimesData);
+
+                // Set initial date if available
+                if (showtimesData.length > 0) {
+                    const uniqueDates = [...new Set(showtimesData.map(s => new Date(s.startTime).toDateString()))];
+                    if (uniqueDates.length > 0) setSelectedDate(uniqueDates[0]);
+                }
+
+                setLoading(false);
+            } catch (error) {
+                console.error('Error fetching booking data:', error);
+                setLoading(false);
+            }
+        };
+        fetchData();
+    }, [id]);
+
+    // Derived Data
+    const availableDates = [...new Set(showtimes.map(s => new Date(s.startTime).toDateString()))];
+
+    const showtimesForDate = showtimes.filter(s =>
+        new Date(s.startTime).toDateString() === selectedDate
+    );
+
+    // Helpers
     const getSeatTier = (rowIndex) => {
-        if (rowIndex >= 6) return { name: 'VIP', price: 500, color: 'var(--color-accent)' }; // Rows G-H
-        if (rowIndex >= 2) return { name: 'Premium', price: 300, color: 'var(--color-primary)' }; // Rows C-F
-        return { name: 'Standard', price: 200, color: '#6b7280' }; // Rows A-B
+        if (rowIndex >= 6) return { name: 'VIP', price: 500, color: 'var(--color-accent)' };
+        if (rowIndex >= 2) return { name: 'Premium', price: 300, color: 'var(--color-primary)' };
+        return { name: 'Standard', price: 200, color: '#6b7280' };
     };
 
-    const getRowLabel = (index) => String.fromCharCode(65 + index); // 0 -> A, 1 -> B...
+    const getRowLabel = (index) => String.fromCharCode(65 + index);
 
     const toggleSeat = (row, col, price, tier) => {
-        const seatId = `${row}-${col}`;
-        const seatLabel = `${getRowLabel(row)}${col + 1}`;
+        const seatLabel = `${getRowLabel(row)}${col + 1}`; // e.g. A1
+        const seatId = seatLabel; // Using label as ID for simplicity match with backend
 
         if (selectedSeats.find(s => s.id === seatId)) {
             setSelectedSeats(selectedSeats.filter(s => s.id !== seatId));
         } else {
+            // Check if max seats reached? (Optional)
             setSelectedSeats([...selectedSeats, { id: seatId, label: seatLabel, price, tier }]);
         }
     };
 
     const calculateTotal = () => {
-        const ticketPrice = selectedSeats.reduce((total, seat) => total + seat.price, 0);
-        const fee = selectedSeats.length * 30; // Booking fee
-        return ticketPrice + fee;
+        // Use showtime price if available, else usage default tier price override?
+        // Actually, backend showtime has a base price. 
+        // For this demo, let's stick to the tier-based pricing in UI + Showtime base price?
+        // Prioritizing Tier Price for complex logic, but technically showtime.price should rule.
+        // Let's add seat price + booking fee.
+
+        const seatTotal = selectedSeats.reduce((total, seat) => total + seat.price, 0);
+        const fee = selectedSeats.length * 30;
+        return seatTotal + fee;
     };
 
-    const handleBooking = () => {
-        alert(`Booked ${selectedSeats.length} tickets for ${movie.title}!\nSeats: ${selectedSeats.map(s => s.label).join(', ')}\nTotal: ₹${calculateTotal()}`);
-        navigate('/');
+    const handleBooking = async () => {
+        const token = localStorage.getItem('token');
+        if (!token) {
+            alert("Please login to book tickets");
+            navigate('/login');
+            return;
+        }
+
+        try {
+            const res = await fetch('http://localhost:5000/api/bookings', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${token}`
+                },
+                body: JSON.stringify({
+                    showtimeId: selectedShowtime._id,
+                    seats: selectedSeats.map(s => s.label),
+                    totalAmount: calculateTotal()
+                })
+            });
+
+            if (res.ok) {
+                alert(`Booking Successful! Total: ₹${calculateTotal()}`);
+                navigate('/profile'); // Or booking confirmation page
+            } else {
+                const err = await res.json();
+                alert(`Booking Failed: ${err.message}`);
+            }
+        } catch (error) {
+            console.error('Booking error:', error);
+            alert('Booking failed due to network error');
+        }
     };
 
-    if (!movie) return <div>Movie not found</div>;
+    if (loading) return <div className="booking-page"><div className="container" style={{ paddingTop: '100px' }}>Loading...</div></div>;
+    if (!movie) return <div className="booking-page"><div className="container" style={{ paddingTop: '100px' }}>Movie not found</div></div>;
 
     return (
         <div className="booking-page">
@@ -65,64 +137,91 @@ const Booking = () => {
                     <div className="seat-selection">
                         <h2 className="page-title">Select Seats</h2>
 
-                        <div className="screen-container">
-                            <div className="screen"></div>
-                            <p className="screen-text">SCREEN</p>
-                        </div>
+                        {/* Showtimes must be selected first */}
+                        {!selectedShowtime && (
+                            <div style={{ marginBottom: '2rem', padding: '1rem', background: 'rgba(255,255,255,0.05)', borderRadius: '12px' }}>
+                                <h3 style={{ marginBottom: '1rem' }}>Select Showtime</h3>
+                                <div className="selection-group">
+                                    <label><Calendar size={16} /> Date</label>
+                                    <div className="chips">
+                                        {availableDates.length > 0 ? availableDates.map((date) => (
+                                            <button
+                                                key={date}
+                                                className={`chip ${selectedDate === date ? 'active' : ''}`}
+                                                onClick={() => {
+                                                    setSelectedDate(date);
+                                                    setSelectedShowtime(null);
+                                                }}
+                                            >
+                                                {date}
+                                            </button>
+                                        )) : <p className="text-muted">No shows available</p>}
+                                    </div>
+                                </div>
+                                <div className="selection-group">
+                                    <label><Clock size={16} /> Time</label>
+                                    <div className="chips">
+                                        {showtimesForDate.map((show) => (
+                                            <button
+                                                key={show._id}
+                                                className={`chip ${selectedShowtime?._id === show._id ? 'active' : ''}`}
+                                                onClick={() => setSelectedShowtime(show)}
+                                            >
+                                                {new Date(show.startTime).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
+                                                <span style={{ fontSize: '0.8em', opacity: 0.7, marginLeft: '4px' }}>({show.screen})</span>
+                                            </button>
+                                        ))}
+                                    </div>
+                                </div>
+                            </div>
+                        )}
 
-                        <div className="seats-grid-wrapper">
-                            <div className="seats-grid">
-                                {Array.from({ length: rows }).map((_, row) => {
-                                    const tier = getSeatTier(row);
-                                    return (
-                                        <div key={row} className="seat-row">
-                                            <span className="row-label">{getRowLabel(row)}</span>
-                                            {Array.from({ length: cols }).map((_, col) => {
-                                                const seatId = `${row}-${col}`;
-                                                const isSelected = selectedSeats.find(s => s.id === seatId);
-                                                // Randomly occupy some seats
-                                                const isOccupied = (row * col + row + col) % 9 === 0;
+                        {selectedShowtime && (
+                            <>
+                                <div className="screen-container">
+                                    <div className="screen"></div>
+                                    <p className="screen-text">SCREEN ({selectedShowtime.screen})</p>
+                                </div>
 
-                                                return (
-                                                    <button
-                                                        key={col}
-                                                        className={`seat ${isSelected ? 'selected' : ''} ${isOccupied ? 'occupied' : ''}`}
-                                                        style={{
-                                                            '--seat-color': tier.color,
-                                                            borderColor: isSelected ? 'white' : 'transparent'
-                                                        }}
-                                                        onClick={() => !isOccupied && toggleSeat(row, col, tier.price, tier.name)}
-                                                        disabled={isOccupied}
-                                                        title={`${tier.name} - ₹${tier.price} (${getRowLabel(row)}${col + 1})`}
-                                                    >
-                                                        <span className="seat-number">{col + 1}</span>
-                                                    </button>
-                                                );
-                                            })}
-                                        </div>
-                                    );
-                                })}
-                            </div>
-                        </div>
+                                <div className="seats-grid-wrapper">
+                                    <div className="seats-grid">
+                                        {Array.from({ length: rows }).map((_, row) => {
+                                            const tier = getSeatTier(row);
+                                            return (
+                                                <div key={row} className="seat-row">
+                                                    <span className="row-label">{getRowLabel(row)}</span>
+                                                    {Array.from({ length: cols }).map((_, col) => {
+                                                        const seatLabel = `${getRowLabel(row)}${col + 1}`;
+                                                        const isSelected = selectedSeats.find(s => s.id === seatLabel);
 
-                        <div className="seat-legend">
-                            <div className="legend-item">
-                                <div className="seat-dot" style={{ background: '#2a2a35' }}></div>
-                                <span>Occupied</span>
-                            </div>
-                            <div className="legend-item">
-                                <div className="seat-dot" style={{ background: '#6b7280' }}></div>
-                                <span>Standard (₹200)</span>
-                            </div>
-                            <div className="legend-item">
-                                <div className="seat-dot" style={{ background: 'var(--color-primary)' }}></div>
-                                <span>Premium (₹300)</span>
-                            </div>
-                            <div className="legend-item">
-                                <div className="seat-dot" style={{ background: 'var(--color-accent)' }}></div>
-                                <span>VIP (₹500)</span>
-                            </div>
-                        </div>
+                                                        // Check if seat is booked in showtime (from backend)
+                                                        // showtime.bookedSeats is array of strings e.g. ["A1", "B2"]
+                                                        const isOccupied = selectedShowtime.bookedSeats?.includes(seatLabel);
+
+                                                        return (
+                                                            <button
+                                                                key={col}
+                                                                className={`seat ${isSelected ? 'selected' : ''} ${isOccupied ? 'occupied' : ''}`}
+                                                                style={{
+                                                                    '--seat-color': tier.color,
+                                                                    borderColor: isSelected ? 'white' : 'transparent',
+                                                                    cursor: isOccupied ? 'not-allowed' : 'pointer'
+                                                                }}
+                                                                onClick={() => !isOccupied && toggleSeat(row, col, tier.price, tier.name)}
+                                                                disabled={isOccupied}
+                                                                title={`${tier.name} - ₹${tier.price} (${seatLabel})`}
+                                                            >
+                                                                <span className="seat-number">{col + 1}</span>
+                                                            </button>
+                                                        );
+                                                    })}
+                                                </div>
+                                            );
+                                        })}
+                                    </div>
+                                </div>
+                            </>
+                        )}
                     </div>
 
                     <div className="booking-summary">
@@ -133,37 +232,16 @@ const Booking = () => {
                                 <p className="summary-genre">{movie.genre}</p>
                             </div>
 
-                            <div className="selection-group">
-                                <label><Calendar size={16} /> Date</label>
-                                <div className="chips">
-                                    {dates.map((date, i) => (
-                                        <button
-                                            key={i}
-                                            className={`chip ${selectedDate === i ? 'active' : ''}`}
-                                            onClick={() => setSelectedDate(i)}
-                                        >
-                                            {date}
-                                        </button>
-                                    ))}
-                                </div>
-                            </div>
-
-                            <div className="selection-group">
-                                <label><Clock size={16} /> Time</label>
-                                <div className="chips">
-                                    {times.map((time, i) => (
-                                        <button
-                                            key={i}
-                                            className={`chip ${selectedTime === i ? 'active' : ''}`}
-                                            onClick={() => setSelectedTime(i)}
-                                        >
-                                            {time}
-                                        </button>
-                                    ))}
-                                </div>
-                            </div>
-
+                            {/* Summary Content */}
                             <div className="price-summary">
+                                <div className="price-row">
+                                    <span>Showtime</span>
+                                    <span>
+                                        {selectedShowtime
+                                            ? `${new Date(selectedShowtime.startTime).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}`
+                                            : '-'}
+                                    </span>
+                                </div>
                                 <div className="price-row">
                                     <span>Seats</span>
                                     <span className="seat-list">
@@ -188,10 +266,10 @@ const Booking = () => {
 
                             <button
                                 className="btn btn-primary btn-block"
-                                disabled={selectedSeats.length === 0}
+                                disabled={selectedSeats.length === 0 || !selectedShowtime}
                                 onClick={handleBooking}
                             >
-                                Checkout
+                                {selectedSeats.length === 0 ? 'Select Seats' : 'Checkout'}
                             </button>
                         </div>
                     </div>
