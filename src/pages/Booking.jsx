@@ -36,7 +36,16 @@ const Booking = () => {
                 // Set initial date if available
                 if (showtimesData.length > 0) {
                     const uniqueDates = [...new Set(showtimesData.map(s => new Date(s.startTime).toDateString()))];
-                    if (uniqueDates.length > 0) setSelectedDate(uniqueDates[0]);
+                    if (uniqueDates.length > 0) {
+                        const firstDate = uniqueDates[0];
+                        setSelectedDate(firstDate);
+
+                        // Auto-select first showtime of this date
+                        const showsForDate = showtimesData.filter(s => new Date(s.startTime).toDateString() === firstDate);
+                        if (showsForDate.length > 0) {
+                            setSelectedShowtime(showsForDate[0]);
+                        }
+                    }
                 }
 
                 setLoading(false);
@@ -111,8 +120,9 @@ const Booking = () => {
             });
 
             if (res.ok) {
-                alert(`Booking Successful! Total: ₹${calculateTotal()}`);
-                navigate('/profile'); // Or booking confirmation page
+                // navigate('/profile'); // Old redirect
+                const bookingData = await res.json();
+                navigate(`/booking-success/${bookingData._id}`);
             } else {
                 const err = await res.json();
                 alert(`Booking Failed: ${err.message}`);
@@ -138,43 +148,41 @@ const Booking = () => {
                         <h2 className="page-title">Select Seats</h2>
 
                         {/* Showtimes must be selected first */}
-                        {!selectedShowtime && (
-                            <div style={{ marginBottom: '2rem', padding: '1rem', background: 'rgba(255,255,255,0.05)', borderRadius: '12px' }}>
-                                <h3 style={{ marginBottom: '1rem' }}>Select Showtime</h3>
-                                <div className="selection-group">
-                                    <label><Calendar size={16} /> Date</label>
-                                    <div className="chips">
-                                        {availableDates.length > 0 ? availableDates.map((date) => (
-                                            <button
-                                                key={date}
-                                                className={`chip ${selectedDate === date ? 'active' : ''}`}
-                                                onClick={() => {
-                                                    setSelectedDate(date);
-                                                    setSelectedShowtime(null);
-                                                }}
-                                            >
-                                                {date}
-                                            </button>
-                                        )) : <p className="text-muted">No shows available</p>}
-                                    </div>
-                                </div>
-                                <div className="selection-group">
-                                    <label><Clock size={16} /> Time</label>
-                                    <div className="chips">
-                                        {showtimesForDate.map((show) => (
-                                            <button
-                                                key={show._id}
-                                                className={`chip ${selectedShowtime?._id === show._id ? 'active' : ''}`}
-                                                onClick={() => setSelectedShowtime(show)}
-                                            >
-                                                {new Date(show.startTime).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
-                                                <span style={{ fontSize: '0.8em', opacity: 0.7, marginLeft: '4px' }}>({show.screen})</span>
-                                            </button>
-                                        ))}
-                                    </div>
+                        <div style={{ marginBottom: '2rem', padding: '1rem', background: 'rgba(255,255,255,0.05)', borderRadius: '12px' }}>
+                            <h3 style={{ marginBottom: '1rem' }}>Select Showtime</h3>
+                            <div className="selection-group">
+                                <label><Calendar size={16} /> Date</label>
+                                <div className="chips">
+                                    {availableDates.length > 0 ? availableDates.map((date) => (
+                                        <button
+                                            key={date}
+                                            className={`chip ${selectedDate === date ? 'active' : ''}`}
+                                            onClick={() => {
+                                                setSelectedDate(date);
+                                                setSelectedShowtime(null);
+                                            }}
+                                        >
+                                            {date}
+                                        </button>
+                                    )) : <p className="text-muted">No shows available</p>}
                                 </div>
                             </div>
-                        )}
+                            <div className="selection-group">
+                                <label><Clock size={16} /> Time</label>
+                                <div className="chips">
+                                    {showtimesForDate.map((show) => (
+                                        <button
+                                            key={show._id}
+                                            className={`chip ${selectedShowtime?._id === show._id ? 'active' : ''}`}
+                                            onClick={() => setSelectedShowtime(show)}
+                                        >
+                                            {new Date(show.startTime).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
+                                            <span style={{ fontSize: '0.8em', opacity: 0.7, marginLeft: '4px' }}>({show.screen})</span>
+                                        </button>
+                                    ))}
+                                </div>
+                            </div>
+                        </div>
 
                         {selectedShowtime && (
                             <>
@@ -222,6 +230,38 @@ const Booking = () => {
                                 </div>
                             </>
                         )}
+
+                        {/* Seat Legend */}
+                        <div className="seat-legend">
+                            <div className="legend-item">
+                                <div className="seat-dot" style={{ background: '#2a2a35', border: '1px solid rgba(255,255,255,0.2)' }}></div>
+                                <span>Available</span>
+                            </div>
+                            <div className="legend-item">
+                                <div className="seat-dot" style={{ background: 'var(--color-primary)', boxShadow: '0 0 10px var(--color-primary)' }}></div>
+                                <span>Selected</span>
+                            </div>
+                            <div className="legend-item">
+                                <div className="seat-dot" style={{ background: '#2a2a35', opacity: 0.5, cursor: 'not-allowed' }}></div>
+                                <span>Occupied</span>
+                            </div>
+                            <div className="legend-item">
+                                <div className="seat-dot" style={{ background: 'var(--color-accent)' }}></div>
+                                <span>VIP</span>
+                            </div>
+                        </div>
+
+                        {selectedShowtime && (
+                            <div style={{ textAlign: 'center', marginTop: '1rem', color: 'var(--color-text-muted)' }}>
+                                {(() => {
+                                    const totalSeats = rows * cols;
+                                    const bookedCount = selectedShowtime.bookedSeats ? selectedShowtime.bookedSeats.length : 0;
+                                    const availableCount = totalSeats - bookedCount;
+                                    return <p>{availableCount} seats available</p>;
+                                })()}
+                            </div>
+                        )}
+
                     </div>
 
                     <div className="booking-summary">

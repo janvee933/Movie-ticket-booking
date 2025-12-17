@@ -12,6 +12,7 @@ const AdminMovies = () => {
         category: 'Hollywood',
         rating: 0,
         image: '',
+        imageFile: null,
         description: '',
         trailerUrl: ''
     });
@@ -61,14 +62,32 @@ const AdminMovies = () => {
 
         const method = formData._id ? 'PUT' : 'POST';
 
+        const data = new FormData();
+        data.append('title', formData.title);
+        data.append('genre', formData.genre);
+        data.append('category', formData.category);
+        data.append('rating', formData.rating);
+        data.append('duration', formData.duration || 0);
+        data.append('description', formData.description);
+        data.append('trailerUrl', formData.trailerUrl);
+        // If there's a new file, append it. If not, don't append image field at all (backend keeps old one)
+        // or send the old URL if you want, but backend logic handles "if file".
+        if (formData.imageFile) {
+            data.append('image', formData.imageFile);
+        } else if (formData.image && typeof formData.image === 'string' && !formData.image.startsWith('http')) {
+            // Edge case: if user typed a URL manually? We removed that input though.
+            // We'll trust the file input mostly.
+            // For updates without changing image, we don't send 'image' key so backend keeps existing.
+        }
+
         try {
             const res = await fetch(url, {
                 method,
                 headers: {
-                    'Content-Type': 'application/json',
+                    // 'Content-Type': 'multipart/form-data', // Auto-set by fetch when body is FormData
                     'Authorization': `Bearer ${token}`
                 },
-                body: JSON.stringify(formData)
+                body: data
             });
 
             if (res.ok) {
@@ -80,6 +99,7 @@ const AdminMovies = () => {
                     category: 'Hollywood',
                     rating: 0,
                     image: '',
+                    imageFile: null,
                     description: '',
                     trailerUrl: ''
                 });
@@ -223,13 +243,21 @@ const AdminMovies = () => {
                                     onChange={e => setFormData({ ...formData, duration: e.target.value })}
                                 />
                             </div>
-                            <input
-                                className="form-input"
-                                placeholder="Image URL (Poster)"
-                                value={formData.image}
-                                onChange={e => setFormData({ ...formData, image: e.target.value })}
-                                required
-                            />
+                            <div className="file-input-container">
+                                <label style={{ display: 'block', marginBottom: '0.5rem', fontSize: '0.9rem', color: '#64748b' }}>Poster Image</label>
+                                <input
+                                    type="file"
+                                    className="form-input"
+                                    accept="image/*"
+                                    onChange={e => setFormData({ ...formData, imageFile: e.target.files[0] })}
+                                    required={!formData._id} // Required only for new movies
+                                />
+                                {formData.image && typeof formData.image === 'string' && (
+                                    <div style={{ marginTop: '0.5rem', fontSize: '0.8rem', color: '#64748b' }}>
+                                        Current: {formData.image.split('/').pop()}
+                                    </div>
+                                )}
+                            </div>
                             <input
                                 className="form-input"
                                 placeholder="Trailer URL (Embed Format)"

@@ -1,11 +1,24 @@
 import express from 'express';
 import Movie from '../models/Movie.js';
 import { verifyToken, verifyAdmin } from '../middleware/auth.js';
+import multer from 'multer';
+import path from 'path';
 
 const router = express.Router();
 
-// Get all movies (Public or Admin - Admin might need more fields/status if we had them)
-// For now, simple get all.
+// Configure Multer for local storage
+const storage = multer.diskStorage({
+    destination: function (req, file, cb) {
+        cb(null, 'uploads/'); // Ensure this directory exists
+    },
+    filename: function (req, file, cb) {
+        cb(null, 'movie-' + Date.now() + path.extname(file.originalname));
+    }
+});
+
+const upload = multer({ storage: storage });
+
+// Get all movies
 router.get('/', async (req, res) => {
     try {
         const movies = await Movie.find().sort({ createdAt: -1 });
@@ -26,10 +39,17 @@ router.get('/:id', async (req, res) => {
     }
 });
 
-// Create Movie (Admin Only)
-router.post('/', verifyToken, verifyAdmin, async (req, res) => {
+// Create Movie (Admin Only) - Now with Image Upload
+router.post('/', verifyToken, verifyAdmin, upload.single('image'), async (req, res) => {
     try {
-        const movie = new Movie(req.body);
+        const movieData = req.body;
+
+        // If a file is uploaded, set the image URL
+        if (req.file) {
+            movieData.image = `http://localhost:5000/uploads/${req.file.filename}`;
+        }
+
+        const movie = new Movie(movieData);
         const savedMovie = await movie.save();
         res.status(201).json(savedMovie);
     } catch (error) {
@@ -37,12 +57,19 @@ router.post('/', verifyToken, verifyAdmin, async (req, res) => {
     }
 });
 
-// Update Movie (Admin Only)
-router.put('/:id', verifyToken, verifyAdmin, async (req, res) => {
+// Update Movie (Admin Only) - Now with Image Upload
+router.put('/:id', verifyToken, verifyAdmin, upload.single('image'), async (req, res) => {
     try {
+        const movieData = req.body;
+
+        // If a file is uploaded, update the image URL
+        if (req.file) {
+            movieData.image = `http://localhost:5000/uploads/${req.file.filename}`;
+        }
+
         const updatedMovie = await Movie.findByIdAndUpdate(
             req.params.id,
-            req.body,
+            movieData,
             { new: true }
         );
         if (!updatedMovie) return res.status(404).json({ message: 'Movie not found' });

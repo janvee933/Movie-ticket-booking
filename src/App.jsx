@@ -11,6 +11,7 @@ import Signup from './pages/Signup';
 import Cinemas from './pages/Cinemas';
 import ComingSoon from './pages/ComingSoon';
 import Profile from './pages/Profile';
+import BookingSuccess from './pages/BookingSuccess';
 import Loader from './components/Loader';
 
 import MainLayout from './components/MainLayout';
@@ -49,6 +50,7 @@ function App() {
         <Route path="/movies" element={<Movies />} />
         <Route path="/movie/:id" element={<MovieDetails />} />
         <Route path="/booking/:id" element={<Booking />} />
+        <Route path="/booking-success/:id" element={<BookingSuccess />} />
         <Route path="/cinemas" element={<Cinemas />} />
         <Route path="/offers" element={<ComingSoon title="Offers" />} />
         <Route path="/profile" element={<Profile />} />

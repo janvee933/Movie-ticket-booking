@@ -39,6 +39,7 @@ const Signup = () => {
 
             // Signup successful
             // You might want to auto-login here or redirect to login
+            localStorage.setItem('token', data.token);
             navigate('/login');
         } catch (err) {
             setError(err.message);
