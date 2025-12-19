@@ -21,7 +21,7 @@ const AdminMovies = () => {
 
     const fetchMovies = useCallback(async () => {
         try {
-            const res = await fetch('http://localhost:5000/api/movies');
+            const res = await fetch('/api/movies');
             const data = await res.json();
             setMovies(data);
             setLoading(false);
@@ -40,7 +40,7 @@ const AdminMovies = () => {
         if (window.confirm('Are you sure you want to delete this movie?')) {
             try {
                 const token = localStorage.getItem('token');
-                const res = await fetch(`http://localhost:5000/api/movies/${id}`, {
+                const res = await fetch(`/api/movies/${id}`, {
                     method: 'DELETE',
                     headers: { 'Authorization': `Bearer ${token}` }
                 });
@@ -57,8 +57,8 @@ const AdminMovies = () => {
         e.preventDefault();
         const token = localStorage.getItem('token');
         const url = formData._id
-            ? `http://localhost:5000/api/movies/${formData._id}`
-            : 'http://localhost:5000/api/movies';
+            ? `/api/movies/${formData._id}`
+            : '/api/movies';
 
         const method = formData._id ? 'PUT' : 'POST';
 

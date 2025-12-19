@@ -9,7 +9,7 @@ const AdminTheaters = () => {
 
     const fetchTheaters = useCallback(async () => {
         try {
-            const res = await fetch('http://localhost:5000/api/theaters');
+            const res = await fetch('/api/theaters');
             const data = await res.json();
             setTheaters(data);
             setLoading(false);
@@ -27,7 +27,7 @@ const AdminTheaters = () => {
     const handleDelete = async (id) => {
         if (window.confirm('Delete this theater?')) {
             const token = localStorage.getItem('token');
-            await fetch(`http://localhost:5000/api/theaters/${id}`, {
+            await fetch(`/api/theaters/${id}`, {
                 method: 'DELETE',
                 headers: { 'Authorization': `Bearer ${token}` }
             });
@@ -38,7 +38,7 @@ const AdminTheaters = () => {
     const handleSubmit = async (e) => {
         e.preventDefault();
         const token = localStorage.getItem('token');
-        await fetch('http://localhost:5000/api/theaters', {
+        await fetch('/api/theaters', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${token}` },
             body: JSON.stringify(formData)

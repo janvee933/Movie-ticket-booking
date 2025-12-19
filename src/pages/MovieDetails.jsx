@@ -11,7 +11,7 @@ const MovieDetails = () => {
     useEffect(() => {
         const fetchMovie = async () => {
             try {
-                const res = await fetch(`http://localhost:5000/api/movies/${id}`);
+                const res = await fetch(`/api/movies/${id}`);
                 if (res.ok) {
                     const data = await res.json();
                     setMovie(data);

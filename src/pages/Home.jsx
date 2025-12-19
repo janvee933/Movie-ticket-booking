@@ -13,7 +13,7 @@ const Home = () => {
     useEffect(() => {
         const fetchMovies = async () => {
             try {
-                const res = await fetch('http://localhost:5000/api/movies');
+                const res = await fetch('/api/movies');
                 const data = await res.json();
                 setMovies(data);
                 setLoading(false);

@@ -17,9 +17,9 @@ const AdminShowtimes = () => {
 
     const fetchData = useCallback(async () => {
         const [showtimesRes, moviesRes, theatersRes] = await Promise.all([
-            fetch('http://localhost:5000/api/showtimes'),
-            fetch('http://localhost:5000/api/movies'),
-            fetch('http://localhost:5000/api/theaters')
+            fetch('/api/showtimes'),
+            fetch('/api/movies'),
+            fetch('/api/theaters')
         ]);
 
         setShowtimes(await showtimesRes.json());
@@ -48,7 +48,7 @@ const AdminShowtimes = () => {
         };
 
         try {
-            await fetch('http://localhost:5000/api/showtimes', {
+            await fetch('/api/showtimes', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${token}` },
                 body: JSON.stringify(payload)
@@ -63,7 +63,7 @@ const AdminShowtimes = () => {
     const handleDelete = async (id) => {
         if (window.confirm('Delete this showtime?')) {
             const token = localStorage.getItem('token');
-            await fetch(`http://localhost:5000/api/showtimes/${id}`, {
+            await fetch(`/api/showtimes/${id}`, {
                 method: 'DELETE',
                 headers: { 'Authorization': `Bearer ${token}` }
             });

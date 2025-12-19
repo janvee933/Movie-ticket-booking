@@ -14,7 +14,7 @@ const BookingSuccess = () => {
         const fetchBooking = async () => {
             try {
                 const token = localStorage.getItem('token');
-                const res = await fetch(`http://localhost:5000/api/bookings/${id}`, { // Note: Need to support get by ID in backend or user bookings
+                const res = await fetch(`/api/bookings/${id}`, { // Note: Need to support get by ID in backend or user bookings
                     headers: { 'Authorization': `Bearer ${token}` }
                 });
 
@@ -23,7 +23,7 @@ const BookingSuccess = () => {
 
                 // Fallback: Fetch all user bookings and find by ID if direct route fails (common in simple backends)
                 if (res.status === 404 || !res.ok) {
-                    const allRes = await fetch('http://localhost:5000/api/bookings', {
+                    const allRes = await fetch('/api/bookings', {
                         headers: { 'Authorization': `Bearer ${token}` }
                     });
                     const allData = await allRes.json();

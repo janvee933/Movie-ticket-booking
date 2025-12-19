@@ -294,3 +294,52 @@
 .btn-block {
     width: 100%;
 }
+
+/* Mobile Sticky Footer */
+.mobile-booking-footer {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    background: #1a1a2e;
+    padding: 1rem 1.5rem;
+    border-top: 1px solid rgba(255, 255, 255, 0.1);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    box-shadow: 0 -4px 20px rgba(0, 0, 0, 0.5);
+    z-index: 1000;
+    animation: slideUp 0.3s ease-out;
+}
+
+@keyframes slideUp {
+    from {
+        transform: translateY(100%);
+    }
+
+    to {
+        transform: translateY(0);
+    }
+}
+
+.mobile-footer-info {
+    display: flex;
+    flex-direction: column;
+}
+
+.footer-seats {
+    font-size: 0.8rem;
+    color: var(--color-text-muted);
+}
+
+.footer-price {
+    font-size: 1.2rem;
+    font-weight: bold;
+    color: var(--color-primary);
+}
+
+@media (min-width: 900px) {
+    .mobile-booking-footer {
+        display: none;
+    }
+}

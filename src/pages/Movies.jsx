@@ -20,7 +20,7 @@ const Movies = () => {
     useEffect(() => {
         const fetchMovies = async () => {
             try {
-                const res = await fetch('http://localhost:5000/api/movies');
+                const res = await fetch('/api/movies');
                 const data = await res.json();
                 setMovies(data);
                 setLoading(false);
@@ -102,22 +102,28 @@ const Movies = () => {
 
                 <div className="movies-grid">
                     {filteredMovies.map(movie => (
-                        <Link to={`/movie/${movie._id}`} key={movie._id} className="movie-card">
+                        <div key={movie._id} className="movie-card">
                             <div className="card-image-wrapper">
-                                <img src={movie.image} alt={movie.title} className="card-image" />
+                                <Link to={`/movie/${movie._id}`}>
+                                    <img src={movie.image} alt={movie.title} className="card-image" />
+                                </Link>
                                 <div className="card-overlay">
-                                    <button className="btn btn-primary btn-sm">Book Now</button>
+                                    <Link to={`/booking/${movie._id}`} className="btn btn-primary btn-sm">
+                                        Book Now
+                                    </Link>
                                 </div>
                                 <span className="category-badge">{movie.category}</span>
                             </div>
                             <div className="card-content">
-                                <h3 className="card-title">{movie.title}</h3>
+                                <Link to={`/movie/${movie._id}`} style={{ textDecoration: 'none', color: 'inherit' }}>
+                                    <h3 className="card-title">{movie.title}</h3>
+                                </Link>
                                 <div className="card-meta">
                                     <span className="card-genre">{movie.genre}</span>
                                     <span className="card-rating"><Star size={14} fill="#ffd700" color="#ffd700" /> {movie.rating}</span>
                                 </div>
                             </div>
-                        </Link>
+                        </div>
                     ))}
                 </div>
 
