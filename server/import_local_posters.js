@@ -17,7 +17,20 @@ const mappings = [
     { file: 'baahubali 2', dbTitle: 'Baahubali 2: The Conclusion', ext: '.jpg' },
     { file: 'dunki', dbTitle: 'Dunki', ext: '.jpg' },
     { file: 'vivah', dbTitle: 'Vivah', ext: '.jpg' },
-    { file: 'om shanti om.jpeg', dbTitle: 'Om Shanti Om', ext: '' } // already has extension
+    { file: 'om shanti om.jpeg', dbTitle: 'Om Shanti Om', ext: '' },
+    { file: 'tiger 3', dbTitle: 'Tiger 3', ext: '.jpg' },
+    { file: 'aashiqui 2', dbTitle: 'Aashiqui 2', ext: '.jpg' },
+    { file: 'ek tha tiger', dbTitle: 'Ek Tha Tiger', ext: '.jpg' },
+    { file: 'geetha govidam', dbTitle: 'Geetha Govindam', ext: '.jpg' },
+    { file: 'hanu man', dbTitle: 'Hanu-Man', ext: '.jpg' },
+    { file: 'hi nanna', dbTitle: 'Hi Nanna', ext: '.jpg' },
+    { file: 'rocky aur rani ki prem kahani', dbTitle: 'Rocky Aur Rani Kii Prem Kahaani', ext: '.jpg' },
+    { file: 'shershah', dbTitle: 'Shershaah', ext: '.jpg' },
+    { file: 'sita ram', dbTitle: 'Sita Ramam', ext: '.jpg' },
+    { file: 'Gadar2', dbTitle: 'Gadar 2', ext: '.jpg' },
+    { file: 'devara 2', dbTitle: 'Devara: Part 1', ext: '.jpg' }, // Assuming Devara 2 file is for Part 1 or upcoming
+    { file: 'drishyam 2', dbTitle: 'Drishyam 2', ext: '.jpg' },
+    { file: 'salaar', dbTitle: 'Salaar: Part 1 - Ceasefire', ext: '.jpg' }
 ];
 
 mongoose.connect(process.env.MONGO_URI || 'mongodb://localhost:27017/movieBooking')
