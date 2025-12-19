@@ -17,8 +17,8 @@ const Footer = () => {
                     </p>
                     <div className="social-links">
                         <a href="#" className="social-link"><Facebook size={20} /></a>
-                        <a href="#" className="social-link"><Twitter size={20} /></a>
-                        <a href="#" className="social-link"><Instagram size={20} /></a>
+                        <a href="https://twitter.com/janvee933" className="social-link" target="_blank" rel="noopener noreferrer"><Twitter size={20} /></a>
+                        <a href="https://www.instagram.com/janvee209?igsh=MXJqY2YxOWI2enhkbg==" className="social-link" target="_blank" rel="noopener noreferrer"><Instagram size={20} /></a>
                         <a href="#" className="social-link"><Youtube size={20} /></a>
                     </div>
                 </div>

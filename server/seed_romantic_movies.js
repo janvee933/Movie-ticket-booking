@@ -13,6 +13,7 @@ mongoose.connect(process.env.MONGO_URI || 'mongodb://localhost:27017/movieBookin
                 genre: "Romance/Drama",
                 category: "Bollywood",
                 rating: 9.0,
+                trailerUrl: "https://www.w3schools.com/html/mov_bbb.mp4",
                 image: "https://upload.wikimedia.org/wikipedia/en/8/80/Dilwale_Dulhania_Le_Jayenge_poster.jpg",
                 description: "Raj and Simran meet on a trip to Europe and fall in love. However, Simran is destined to marry another man back in India. Raj follows her to India to win her hand and her father's approval.",
                 duration: 189,
@@ -23,6 +24,7 @@ mongoose.connect(process.env.MONGO_URI || 'mongodb://localhost:27017/movieBookin
                 genre: "Romance/Comedy",
                 category: "Bollywood",
                 rating: 8.5,
+                trailerUrl: "https://www.w3schools.com/html/mov_bbb.mp4",
                 image: "https://upload.wikimedia.org/wikipedia/en/9/9f/Jab_We_Met_Poster.jpg",
                 description: "A depressed wealthy businessman finds his life changing after he meets a spunky and care-free young woman on a train.",
                 duration: 138,
@@ -33,6 +35,7 @@ mongoose.connect(process.env.MONGO_URI || 'mongodb://localhost:27017/movieBookin
                 genre: "Romance/Comedy",
                 category: "Bollywood",
                 rating: 7.0,
+                trailerUrl: "https://www.w3schools.com/html/mov_bbb.mp4",
                 image: "https://upload.wikimedia.org/wikipedia/en/6/65/Rocky_Aur_Rani_Ki_Prem_Kahaani_poster.jpg",
                 description: "Flamboyant Rocky and intellectual Rani fall in love, but their vastly different families disapprove. They decide to live with each other's families for three months before getting married.",
                 duration: 168,
@@ -43,6 +46,7 @@ mongoose.connect(process.env.MONGO_URI || 'mongodb://localhost:27017/movieBookin
                 genre: "Romance/Musical",
                 category: "Bollywood",
                 rating: 7.5,
+                trailerUrl: "https://www.w3schools.com/html/mov_bbb.mp4",
                 image: "https://upload.wikimedia.org/wikipedia/en/f/f3/Aashiqui_2_poster.jpg",
                 description: "Rahul loses his fans and fame due to alcoholism, but he then decides to turn a small time singer into a rising star.",
                 duration: 132,
@@ -55,6 +59,7 @@ mongoose.connect(process.env.MONGO_URI || 'mongodb://localhost:27017/movieBookin
                 genre: "Romance/Drama",
                 category: "Hollywood",
                 rating: 9.2,
+                trailerUrl: "https://www.w3schools.com/html/mov_bbb.mp4",
                 image: "https://upload.wikimedia.org/wikipedia/en/1/18/Titanic_%281997_film%29_poster.png",
                 description: "A seventeen-year-old aristocrat falls in love with a kind but poor artist aboard the luxurious, ill-fated R.M.S. Titanic.",
                 duration: 195,
@@ -65,6 +70,7 @@ mongoose.connect(process.env.MONGO_URI || 'mongodb://localhost:27017/movieBookin
                 genre: "Romance/Drama",
                 category: "Hollywood",
                 rating: 8.8,
+                trailerUrl: "https://www.w3schools.com/html/mov_bbb.mp4",
                 image: "https://upload.wikimedia.org/wikipedia/en/8/86/Posternotebook.jpg",
                 description: "A poor yet passionate young man falls in love with a rich young woman, giving her a sense of freedom, but they are soon separated because of their social differences.",
                 duration: 123,
@@ -75,6 +81,7 @@ mongoose.connect(process.env.MONGO_URI || 'mongodb://localhost:27017/movieBookin
                 genre: "Romance/Musical",
                 category: "Hollywood",
                 rating: 8.5,
+                trailerUrl: "https://www.w3schools.com/html/mov_bbb.mp4",
                 image: "https://upload.wikimedia.org/wikipedia/en/a/ab/La_La_Land_%28film%29.png",
                 description: "While navigating their careers in Los Angeles, a pianist and an actress fall in love while attempting to reconcile their aspirations for the future.",
                 duration: 128,
@@ -87,6 +94,7 @@ mongoose.connect(process.env.MONGO_URI || 'mongodb://localhost:27017/movieBookin
                 genre: "Romance/Drama",
                 category: "Tollywood",
                 rating: 8.6,
+                trailerUrl: "https://www.w3schools.com/html/mov_bbb.mp4",
                 image: "https://upload.wikimedia.org/wikipedia/en/0/00/Sita_Ramam.jpg",
                 description: "An orphan soldier, Lieutenant Ram's life changes, after he gets a letter from a girl named Sita. He meets her and love blossoms between them. When he comes back to his camp in Kashmir, he sends a letter to Sita which won't reach her.",
                 duration: 163,
@@ -97,6 +105,7 @@ mongoose.connect(process.env.MONGO_URI || 'mongodb://localhost:27017/movieBookin
                 genre: "Romance/Drama",
                 category: "Tollywood",
                 rating: 8.3,
+                trailerUrl: "https://www.w3schools.com/html/mov_bbb.mp4",
                 image: "https://upload.wikimedia.org/wikipedia/en/b/b5/Hi_Nanna_poster.jpg",
                 description: "A doting father and his 6-year-old daughter find their lives taking a dramatic turn when the woman he loves marries someone else and a stranger enters their world.",
                 duration: 155,
@@ -107,6 +116,7 @@ mongoose.connect(process.env.MONGO_URI || 'mongodb://localhost:27017/movieBookin
                 genre: "Romance/Comedy",
                 category: "Tollywood",
                 rating: 7.7,
+                trailerUrl: "https://www.w3schools.com/html/mov_bbb.mp4",
                 image: "https://upload.wikimedia.org/wikipedia/en/2/23/Geetha_Govindam_poster.jpg",
                 description: "An innocent young lecturer is misunderstood as a pervert and despised by a woman who co-incidentally turns out to be the younger sister of his brother-in-law.",
                 duration: 142,
@@ -124,7 +134,7 @@ mongoose.connect(process.env.MONGO_URI || 'mongodb://localhost:27017/movieBookin
             } else {
                 console.log(`[SKIP] Already exists: ${movie.title}`);
                 // Update image just in case to ensure high quality
-                await Movie.updateOne({ _id: exists._id }, { image: movie.image });
+                await Movie.updateOne({ _id: exists._id }, { image: movie.image, trailerUrl: movie.trailerUrl });
             }
         }
 

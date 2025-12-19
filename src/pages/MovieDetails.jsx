@@ -1,12 +1,19 @@
 import React, { useState, useEffect } from 'react';
 import { useParams, Link } from 'react-router-dom';
 import { Star, Clock, Calendar, Play, ArrowLeft } from 'lucide-react';
+import ReviewSection from '../components/ReviewSection';
+import TrailerModal from '../components/TrailerModal';
 import './MovieDetails.css';
 
 const MovieDetails = () => {
     const { id } = useParams();
     const [movie, setMovie] = useState(null);
     const [loading, setLoading] = useState(true);
+    const [showTrailer, setShowTrailer] = useState(false);
+
+    const handleReviewAdded = (updatedMovie) => {
+        setMovie(updatedMovie);
+    };
 
     useEffect(() => {
         const fetchMovie = async () => {
@@ -85,13 +92,28 @@ const MovieDetails = () => {
                             <Link to={`/booking/${movie._id}`} className="btn btn-primary btn-lg">
                                 Book Tickets
                             </Link>
-                            <button className="btn btn-outline btn-lg">
+                            <button
+                                className="btn btn-outline btn-lg"
+                                onClick={() => setShowTrailer(true)}
+                            >
                                 <Play size={20} style={{ marginRight: '0.5rem' }} /> Watch Trailer
                             </button>
                         </div>
                     </div>
                 </div>
+
+                <ReviewSection
+                    movieId={movie._id}
+                    reviews={movie.reviews || []}
+                    onReviewAdded={handleReviewAdded}
+                />
             </div>
+
+            <TrailerModal
+                isOpen={showTrailer}
+                onClose={() => setShowTrailer(false)}
+                trailerUrl={movie.trailerUrl}
+            />
         </div>
     );
 };

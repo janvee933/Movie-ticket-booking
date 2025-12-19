@@ -79,6 +79,37 @@ router.put('/:id', verifyToken, verifyAdmin, upload.single('image'), async (req,
     }
 });
 
+// Add Review
+router.post('/:id/reviews', verifyToken, async (req, res) => {
+    try {
+        const { rating, comment, userName } = req.body;
+        const movie = await Movie.findById(req.params.id);
+
+        if (!movie) {
+            return res.status(404).json({ message: 'Movie not found' });
+        }
+
+        const review = {
+            user: userName || 'Anonymous', // Ideally get name from user token/db
+            rating: Number(rating),
+            comment,
+            createdAt: Date.now()
+        };
+
+        movie.reviews.push(review);
+
+        // Recalculate average rating
+        movie.rating = movie.reviews.reduce((acc, item) => item.rating + acc, 0) / movie.reviews.length;
+        // Round to 1 decimal place
+        movie.rating = Math.round(movie.rating * 10) / 10;
+
+        await movie.save();
+        res.status(201).json(movie);
+    } catch (error) {
+        res.status(400).json({ message: error.message });
+    }
+});
+
 // Delete Movie (Admin Only)
 router.delete('/:id', verifyToken, verifyAdmin, async (req, res) => {
     try {
