@@ -4,7 +4,8 @@ import './Loader.css';
 const Loader = () => {
     return (
         <div className="loader-container">
-            <span className="loader"></span>
+            <div className="loader"></div>
+            <div className="loader-text">Loading Experience...</div>
         </div>
     );
 };

@@ -44,7 +44,11 @@ const BookingSuccess = () => {
 
     const handleDownload = async () => {
         const element = document.getElementById('ticket-card');
-        const canvas = await html2canvas(element);
+        const canvas = await html2canvas(element, {
+            useCORS: true,
+            allowTaint: true,
+            scrollY: -window.scrollY // Fix potential scroll offset issues
+        });
         const data = canvas.toDataURL('image/png');
         const link = document.createElement('a');
         link.href = data;
@@ -127,6 +131,7 @@ const BookingSuccess = () => {
                                 src={`https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=${booking._id}`}
                                 alt="QR Code"
                                 className="qr-code"
+                                crossOrigin="anonymous"
                             />
                             <div className="ticket-id">ID: {booking._id.toUpperCase().slice(-8)}</div>
                             <div style={{ fontSize: '0.8rem', color: '#666', marginBottom: '0.5rem' }}>
