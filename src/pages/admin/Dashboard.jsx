@@ -50,6 +50,38 @@ const AdminDashboard = () => {
                     </div>
                 ))}
             </div>
+
+            <div style={{ marginTop: '3rem' }}>
+                <h2 style={{ marginBottom: '1.5rem', color: '#1a1c23' }}>Recent Bookings</h2>
+                <div style={{ overflowX: 'auto', background: 'white', borderRadius: '12px', padding: '1rem', border: '1px solid #e2e8f0' }}>
+                    <table className="admin-table">
+                        <thead>
+                            <tr>
+                                <th>Booking ID</th>
+                                <th>User</th>
+                                <th>Amount</th>
+                                <th>Date</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {stats.recentBookings && stats.recentBookings.length > 0 ? (
+                                stats.recentBookings.map(b => (
+                                    <tr key={b._id}>
+                                        <td style={{ fontFamily: 'monospace', fontSize: '0.9em' }}>{b._id.slice(-6).toUpperCase()}</td>
+                                        <td>{b.user ? b.user.name : 'Unknown'}</td>
+                                        <td style={{ fontWeight: 'bold', color: '#10B981' }}>₹{b.totalAmount}</td>
+                                        <td>{new Date(b.createdAt).toLocaleDateString()} {new Date(b.createdAt).toLocaleTimeString()}</td>
+                                    </tr>
+                                ))
+                            ) : (
+                                <tr>
+                                    <td colSpan="4" style={{ textAlign: 'center', padding: '2rem' }}>No recent bookings</td>
+                                </tr>
+                            )}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
         </div>
     );
 };

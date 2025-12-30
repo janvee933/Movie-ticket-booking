@@ -2,10 +2,10 @@
 [OK] Inception || https://upload.wikimedia.org/wikipedia/en/2/2e/Inception_%282010%29_theatrical_poster.jpg
 [OK] Interstellar || https://upload.wikimedia.org/wikipedia/en/b/bc/Interstellar_film_poster.jpg
 [OK] The Dark Knight || https://upload.wikimedia.org/wikipedia/en/1/1c/The_Dark_Knight_%282008_film%29.jpg
-[OK] Dune: Part Two || https://upload.wikimedia.org/wikipedia/en/5/52/Dune_Part_Two.jpg
+[OK] Dune: Part Two || https://m.media-amazon.com/images/M/MV5BN2QyZGU4ZDctOWMzMy00NTc5LThlOGQtODhmNDI1NmY5YzAwXkEyXkFqcGdeQXVyMDM2NDM2MQ@@._V1_.jpg
 [OK] Avengers: Endgame || https://upload.wikimedia.org/wikipedia/en/0/0d/Avengers_Endgame_poster.jpg
 [OK] Oppenheimer || https://upload.wikimedia.org/wikipedia/en/4/4a/Oppenheimer_%28film%29.jpg
-[OK] Spider-Man: Across the Spider-Verse || https://upload.wikimedia.org/wikipedia/en/b/b4/Spider-Man-_Across_the_Spider-Verse_poster.jpg
+[OK] Spider-Man || https://upload.wikimedia.org/wikipedia/en/f/f3/Spider-Man2002Poster.jpg
 [OK] The Batman || https://image.tmdb.org/t/p/original/74xTEgt7R36Fpooo50r9T25onhq.jpg
 [OK] Avatar: The Way of Water || https://image.tmdb.org/t/p/original/t6HIqrRAclMCA60NsSmeqe9RmNV.jpg
 [OK] Top Gun: Maverick || https://upload.wikimedia.org/wikipedia/en/2/22/Top_Gun_Maverick_poster.jpg
@@ -13,33 +13,33 @@
 [OK] 3 Idiots || https://upload.wikimedia.org/wikipedia/en/d/df/3_idiots_poster.jpg
 [OK] Dangal || https://upload.wikimedia.org/wikipedia/en/9/99/Dangal_Poster.jpg
 [OK] Animal || https://upload.wikimedia.org/wikipedia/en/9/90/Animal_%282023_film%29_poster.jpg
-[OK] Tiger 3 || https://upload.wikimedia.org/wikipedia/en/d/d9/Tiger_3_poster.jpg
-[OK] Dunki || https://upload.wikimedia.org/wikipedia/en/d/d1/Dunki_poster.jpg
-[OK] Ek Tha Tiger || https://upload.wikimedia.org/wikipedia/en/2/22/Ek_Tha_Tiger_poster.jpg
-[OK] Om Shanti Om || https://upload.wikimedia.org/wikipedia/en/0/0e/Om_Shanti_Om_poster.jpg
-[OK] Vivah || https://upload.wikimedia.org/wikipedia/en/7/77/Vivah_poster.jpg
+[OK] Tiger 3 || http://localhost:5000/uploads/tiger_3.jpg
+[OK] Dunki || http://localhost:5000/uploads/dunki.jpg
+[OK] Ek Tha Tiger || http://localhost:5000/uploads/ek_tha_tiger.jpg
+[OK] Om Shanti Om || http://localhost:5000/uploads/om_shanti_om.jpeg
+[OK] Vivah || http://localhost:5000/uploads/vivah.jpg
 [OK] Pathaan || https://upload.wikimedia.org/wikipedia/en/c/c3/Pathaan_film_poster.jpg
-[OK] Gadar 2 || https://upload.wikimedia.org/wikipedia/en/6/69/Gadar_2_film_poster.jpg
+[OK] Gadar 2 || http://localhost:5000/uploads/gadar2.jpg
 [OK] RRR || https://upload.wikimedia.org/wikipedia/en/d/d7/RRR_Poster.jpg
-[OK] Baahubali 2: The Conclusion || https://upload.wikimedia.org/wikipedia/en/f/f9/Baahubali_the_Conclusion.jpg
+[OK] Baahubali 2: The Conclusion || http://localhost:5000/uploads/baahubali_2.jpg
 [OK] Pushpa: The Rise || https://upload.wikimedia.org/wikipedia/en/7/75/Pushpa_-_The_Rise_%282021_film%29.jpg
-[OK] Baahubali: The Beginning || https://upload.wikimedia.org/wikipedia/en/5/51/Baahubali_The_Beginning_poster.jpg
+[OK] Baahubali: The Beginning || http://localhost:5000/uploads/baahubali.jpg
 [OK] K.G.F: Chapter 2 || https://upload.wikimedia.org/wikipedia/en/d/d0/K.G.F_Chapter_2.jpg
 [OK] Leo || https://upload.wikimedia.org/wikipedia/en/7/75/Leo_%282023_Indian_film%29.jpg
 [OK] 12th Fail || https://upload.wikimedia.org/wikipedia/en/f/f2/12th_Fail_poster.jpeg
-[OK] Salaar: Part 1 - Ceasefire || https://upload.wikimedia.org/wikipedia/en/a/a2/Salaar_Part_1_%E2%80%93_Ceasefire.jpg
+[OK] Salaar: Part 1 - Ceasefire || http://localhost:5000/uploads/salaar.jpg
 [OK] Spider-Man: No Way Home || https://upload.wikimedia.org/wikipedia/en/0/00/Spider-Man_No_Way_Home_poster.jpg
 [OK] Barbie || https://upload.wikimedia.org/wikipedia/en/0/0b/Barbie_2023_poster.jpg
 [OK] Deadpool & Wolverine || https://upload.wikimedia.org/wikipedia/en/thumb/4/4c/Deadpool_%26_Wolverine_poster.jpg/220px-Deadpool_%26_Wolverine_poster.jpg
 [OK] Inside Out 2 || https://upload.wikimedia.org/wikipedia/en/f/f7/Inside_Out_2_poster.jpg
 [OK] Godzilla x Kong: The New Empire || https://upload.wikimedia.org/wikipedia/en/b/be/Godzilla_x_kong_the_new_empire_poster.jpg
-[OK] Stree 2 || https://upload.wikimedia.org/wikipedia/en/1/1a/Stree_2_poster.jpg
-[OK] Shershaah || https://upload.wikimedia.org/wikipedia/en/9/93/Shershaah_film_poster.jpg
-[OK] Drishyam 2 || https://upload.wikimedia.org/wikipedia/en/d/dc/Drishyam_2_2022_film_poster.jpg
+[OK] Stree || https://upload.wikimedia.org/wikipedia/en/9/9f/Stree_poster.jpg
+[OK] Shershaah || http://localhost:5000/uploads/shershah.jpg
+[OK] Drishyam 2 || http://localhost:5000/uploads/drishyam_2.jpg
 [OK] Kantara || https://upload.wikimedia.org/wikipedia/en/8/84/Kantara_poster.jpeg
 [OK] Kalki 2898 AD || https://upload.wikimedia.org/wikipedia/en/4/4c/Kalki_2898_AD.jpg
-[OK] Hanu-Man || https://upload.wikimedia.org/wikipedia/en/a/a2/Hanu_Man_poster.jpg
-[OK] Devara: Part 1 || https://upload.wikimedia.org/wikipedia/en/5/50/Devara_Part_1_poster.jpg
+[OK] Hanu-Man || http://localhost:5000/uploads/hanu_man.jpg
+[OK] Devara: Part 1 || http://localhost:5000/uploads/devara_2.jpg
 [OK] Dilwale Dulhania Le Jayenge || https://upload.wikimedia.org/wikipedia/en/8/80/Dilwale_Dulhania_Le_Jayenge_poster.jpg
 [OK] Jab We Met || https://upload.wikimedia.org/wikipedia/en/9/9f/Jab_We_Met_Poster.jpg
 [OK] Rocky Aur Rani Kii Prem Kahaani || https://upload.wikimedia.org/wikipedia/en/6/65/Rocky_Aur_Rani_Ki_Prem_Kahaani_poster.jpg
@@ -50,6 +50,23 @@
 [OK] Sita Ramam || https://upload.wikimedia.org/wikipedia/en/0/00/Sita_Ramam.jpg
 [OK] Hi Nanna || https://upload.wikimedia.org/wikipedia/en/b/b5/Hi_Nanna_poster.jpg
 [OK] Geetha Govindam || https://upload.wikimedia.org/wikipedia/en/2/23/Geetha_Govindam_poster.jpg
+[OK] War || https://upload.wikimedia.org/wikipedia/en/6/6f/War_official_poster.jpg
+[OK] Kabir Singh || https://upload.wikimedia.org/wikipedia/en/d/dc/Kabir_Singh.jpg
+[OK] Zindagi Na Milegi Dobara || https://upload.wikimedia.org/wikipedia/en/3/3d/Zindaginamilegidobara.jpg
+[OK] Sanju || https://upload.wikimedia.org/wikipedia/en/6/68/Sanju_-_Theatrical_Poster.jpeg
+[OK] Bajrangi Bhaijaan || https://upload.wikimedia.org/wikipedia/en/d/dd/Bajrangi_Bhaijaan_Poster.jpg
+[OK] PK || https://upload.wikimedia.org/wikipedia/en/c/c3/PK_poster.jpg
+[OK] Sultan || https://upload.wikimedia.org/wikipedia/en/1/1f/Sultan_film_poster.jpg
+[OK] Chennai Express || https://upload.wikimedia.org/wikipedia/en/1/1b/Chennai_Express.jpg
+[OK] Yeh Jawaani Hai Deewani || https://upload.wikimedia.org/wikipedia/en/1/15/Yeh_Jawaani_Hai_Deewani.jpg
+[OK] Uri: The Surgical Strike || https://upload.wikimedia.org/wikipedia/en/3/3b/Uri_The_Surgical_Strike_poster.jpg
+[OK] Spider-Man 2 || https://upload.wikimedia.org/wikipedia/en/0/02/Spider-Man_2_Poster.jpg
+[OK] Spider-Man 3 || https://upload.wikimedia.org/wikipedia/en/7/7a/Spider-Man_3%2C_International_Poster.jpg
+[OK] The Amazing Spider-Man || https://upload.wikimedia.org/wikipedia/en/0/0c/The_Amazing_Spider-Man_theatrical_poster.jpeg
+[OK] The Amazing Spider-Man 2 || https://upload.wikimedia.org/wikipedia/en/0/02/The_Amazing_Spider-Man_2_poster.jpg
+[OK] Spider-Man: Homecoming || https://upload.wikimedia.org/wikipedia/en/f/f9/Spider-Man_Homecoming_poster.jpg
+[OK] Spider-Man: Far From Home || https://upload.wikimedia.org/wikipedia/en/b/bd/Spider-Man_Far_From_Home_poster.jpg
+[OK] Stree 2 || https://upload.wikimedia.org/wikipedia/en/1/1a/Stree_2_poster.jpg
 
-Total Movies: 51
+Total Movies: 68
 Total Missing info: 0

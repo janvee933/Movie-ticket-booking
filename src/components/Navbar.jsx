@@ -1,9 +1,11 @@
 import React, { useState, useEffect } from 'react';
 import { Link, NavLink, useNavigate } from 'react-router-dom';
-import { Film, Search, Menu, X, User } from 'lucide-react';
+import { Film, Search, Menu, X, User, Globe } from 'lucide-react';
+import { useTranslation } from 'react-i18next';
 import './Navbar.css';
 
 const Navbar = () => {
+    const { t, i18n } = useTranslation();
     const [isScrolled, setIsScrolled] = useState(false);
     const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
     const [isSearchOpen, setIsSearchOpen] = useState(false);
@@ -35,6 +37,11 @@ const Navbar = () => {
         }
     };
 
+    const toggleLanguage = () => {
+        const newLang = i18n.language === 'en' ? 'hi' : 'en';
+        i18n.changeLanguage(newLang);
+    };
+
     return (
         <nav className={`navbar ${isScrolled ? 'scrolled' : ''}`}>
             <div className="container navbar-content">
@@ -44,18 +51,23 @@ const Navbar = () => {
                 </Link>
 
                 <div className="desktop-nav">
-                    <NavLink to="/home" className={({ isActive }) => `nav-link ${isActive ? 'active' : ''}`}>Home</NavLink>
-                    <NavLink to="/movies" className={({ isActive }) => `nav-link ${isActive ? 'active' : ''}`}>Movies</NavLink>
-                    <NavLink to="/cinemas" className={({ isActive }) => `nav-link ${isActive ? 'active' : ''}`}>Cinemas</NavLink>
-                    <NavLink to="/offers" className={({ isActive }) => `nav-link ${isActive ? 'active' : ''}`}>Offers</NavLink>
+                    <NavLink to="/home" className={({ isActive }) => `nav-link ${isActive ? 'active' : ''}`}>{t('nav.home')}</NavLink>
+                    <NavLink to="/movies" className={({ isActive }) => `nav-link ${isActive ? 'active' : ''}`}>{t('nav.movies')}</NavLink>
+                    <NavLink to="/cinemas" className={({ isActive }) => `nav-link ${isActive ? 'active' : ''}`}>{t('nav.cinemas')}</NavLink>
+                    <NavLink to="/offers" className={({ isActive }) => `nav-link ${isActive ? 'active' : ''}`}>{t('nav.offers')}</NavLink>
                 </div>
 
                 <div className="nav-actions">
+                    <button className="icon-btn lang-btn" onClick={toggleLanguage} title="Switch Language">
+                        <Globe size={20} />
+                        <span className="lang-code">{i18n.language.toUpperCase()}</span>
+                    </button>
+
                     <div className={`search-bar ${isSearchOpen ? 'active' : ''}`}>
                         <form onSubmit={handleSearchSubmit}>
                             <input
                                 type="text"
-                                placeholder="Search movies..."
+                                placeholder={t('nav.search_placeholder')}
                                 value={searchQuery}
                                 onChange={(e) => setSearchQuery(e.target.value)}
                                 className="search-input"
@@ -78,7 +90,7 @@ const Navbar = () => {
                             <span className="profile-name">{user.name.split(' ')[0]}</span>
                         </Link>
                     ) : (
-                        <Link to="/login" className="btn btn-primary login-btn">Sign In</Link>
+                        <Link to="/login" className="btn btn-primary login-btn">{t('nav.signin')}</Link>
                     )}
 
                     <button
@@ -93,12 +105,15 @@ const Navbar = () => {
             {/* Mobile Menu */}
             {isMobileMenuOpen && (
                 <div className="mobile-menu">
-                    <NavLink to="/home" className={({ isActive }) => `mobile-link ${isActive ? 'active' : ''}`} onClick={() => setIsMobileMenuOpen(false)}>Home</NavLink>
-                    <NavLink to="/movies" className={({ isActive }) => `mobile-link ${isActive ? 'active' : ''}`} onClick={() => setIsMobileMenuOpen(false)}>Movies</NavLink>
-                    <NavLink to="/cinemas" className={({ isActive }) => `mobile-link ${isActive ? 'active' : ''}`} onClick={() => setIsMobileMenuOpen(false)}>Cinemas</NavLink>
-                    <NavLink to="/offers" className={({ isActive }) => `mobile-link ${isActive ? 'active' : ''}`} onClick={() => setIsMobileMenuOpen(false)}>Offers</NavLink>
+                    <NavLink to="/home" className={({ isActive }) => `mobile-link ${isActive ? 'active' : ''}`} onClick={() => setIsMobileMenuOpen(false)}>{t('nav.home')}</NavLink>
+                    <NavLink to="/movies" className={({ isActive }) => `mobile-link ${isActive ? 'active' : ''}`} onClick={() => setIsMobileMenuOpen(false)}>{t('nav.movies')}</NavLink>
+                    <NavLink to="/cinemas" className={({ isActive }) => `mobile-link ${isActive ? 'active' : ''}`} onClick={() => setIsMobileMenuOpen(false)}>{t('nav.cinemas')}</NavLink>
+                    <NavLink to="/offers" className={({ isActive }) => `mobile-link ${isActive ? 'active' : ''}`} onClick={() => setIsMobileMenuOpen(false)}>{t('nav.offers')}</NavLink>
+                    <div className="mobile-link" onClick={toggleLanguage} style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                        <Globe size={16} /> Switch to {i18n.language === 'en' ? 'Hindi' : 'English'}
+                    </div>
                     <Link to="/profile" className="mobile-link highlight" onClick={() => setIsMobileMenuOpen(false)}>
-                        {user ? 'My Account' : 'Sign In'}
+                        {user ? t('nav.myaccount') : t('nav.signin')}
                     </Link>
                 </div>
             )}

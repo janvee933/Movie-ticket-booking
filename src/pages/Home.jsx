@@ -1,12 +1,15 @@
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { Play, Star } from 'lucide-react';
+import { useTranslation } from 'react-i18next';
 
 import MovieSection from '../components/MovieSection';
+import RecommendedMovies from '../components/RecommendedMovies';
 import Loader from '../components/Loader';
 import './Home.css';
 
 const Home = () => {
+    const { t } = useTranslation();
     const [movies, setMovies] = useState([]);
     const [loading, setLoading] = useState(true);
 
@@ -46,7 +49,7 @@ const Home = () => {
                 <section className="hero" style={{ backgroundImage: `url(${featuredMovie.image})` }}>
                     <div className="hero-overlay"></div>
                     <div className="container hero-content">
-                        <span className="tag">Now Showing</span>
+                        <span className="tag">{t('home.now_showing')}</span>
                         <h1 className="hero-title">{featuredMovie.title}</h1>
                         <div className="hero-meta">
                             <span className="rating"><Star size={16} fill="#ffd700" color="#ffd700" /> {featuredMovie.rating}</span>
@@ -58,11 +61,11 @@ const Home = () => {
                         <p className="hero-desc">{featuredMovie.description}</p>
                         <div className="hero-actions">
                             <Link to={`/movie/${featuredMovie._id}`} className="btn btn-primary">
-                                Book Tickets
+                                {t('home.book_tickets')}
                             </Link>
                             {featuredMovie.trailerUrl && (
                                 <a href={featuredMovie.trailerUrl} target="_blank" rel="noopener noreferrer" className="btn btn-outline">
-                                    <Play size={18} style={{ marginRight: '0.5rem' }} /> Watch Trailer
+                                    <Play size={18} style={{ marginRight: '0.5rem' }} /> {t('home.watch_trailer')}
                                 </a>
                             )}
                         </div>
@@ -71,18 +74,21 @@ const Home = () => {
             )}
 
             <div className="content-wrapper">
+                {/* Personal Recommendations */}
+                <RecommendedMovies />
+
                 <MovieSection
-                    title="Hollywood Blockbusters"
+                    title={t('home.hollywood')}
                     movies={getMoviesByCategory('Hollywood')}
                 />
 
                 <MovieSection
-                    title="Bollywood Hits"
+                    title={t('home.bollywood')}
                     movies={getMoviesByCategory('Bollywood')}
                 />
 
                 <MovieSection
-                    title="Tollywood & South Indian Cinema"
+                    title={t('home.tollywood')}
                     movies={getMoviesByCategory('Tollywood')}
                 />
             </div>

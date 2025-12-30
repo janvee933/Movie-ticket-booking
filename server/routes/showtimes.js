@@ -15,7 +15,7 @@ router.get('/', async (req, res) => {
 
         const showtimes = await Showtime.find(query)
             .populate('movie', 'title')
-            .populate('theater', 'name city')
+            .populate('theater', 'name city screens')
             .sort({ startTime: 1 });
 
         res.json(showtimes);

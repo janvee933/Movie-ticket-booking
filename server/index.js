@@ -11,6 +11,8 @@ import showtimeRoutes from './routes/showtimes.js';
 import bookingRoutes from './routes/bookings.js';
 import adminRoutes from './routes/admin.js';
 import userRoutes from './routes/users.js';
+import recommendationRoutes from './routes/recommendations.js';
+import offerRoutes from './routes/offers.js';
 
 const app = express();
 // Use SERVER_PORT if available, otherwise default to 5000. 
@@ -35,6 +37,9 @@ app.use('/api/showtimes', showtimeRoutes);
 app.use('/api/bookings', bookingRoutes);
 app.use('/api/admin', adminRoutes);
 app.use('/api/users', userRoutes);
+app.use('/api/recommendations', recommendationRoutes);
+app.use('/api/offers', offerRoutes);
+
 
 
 

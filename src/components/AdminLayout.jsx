@@ -1,6 +1,6 @@
 import React from 'react';
 import { Outlet, NavLink, useNavigate } from 'react-router-dom';
-import { LayoutDashboard, Film, Monitor, Calendar, BookOpen, LogOut } from 'lucide-react';
+import { LayoutDashboard, Film, Monitor, Calendar, BookOpen, LogOut, Tag } from 'lucide-react';
 import './AdminLayout.css';
 
 const AdminLayout = () => {
@@ -33,6 +33,9 @@ const AdminLayout = () => {
                     </NavLink>
                     <NavLink to="/admin/bookings" className={({ isActive }) => `admin-link ${isActive ? 'active' : ''}`}>
                         <BookOpen size={20} /> Bookings
+                    </NavLink>
+                    <NavLink to="/admin/offers" className={({ isActive }) => `admin-link ${isActive ? 'active' : ''}`}>
+                        <Tag size={20} /> Offers
                     </NavLink>
                 </nav>
                 <button onClick={handleLogout} className="admin-logout">

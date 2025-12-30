@@ -23,6 +23,7 @@ import AdminMovies from './pages/admin/AdminMovies';
 import AdminTheaters from './pages/admin/AdminTheaters';
 import AdminShowtimes from './pages/admin/AdminShowtimes';
 import AdminBookings from './pages/admin/AdminBookings';
+import AdminOffers from './pages/admin/AdminOffers';
 
 function App() {
   const [loading, setLoading] = React.useState(true);
@@ -66,6 +67,7 @@ function App() {
           <Route path="theaters" element={<AdminTheaters />} />
           <Route path="showtimes" element={<AdminShowtimes />} />
           <Route path="bookings" element={<AdminBookings />} />
+          <Route path="offers" element={<AdminOffers />} />
         </Route>
       </Route>
     </Routes>

@@ -15,9 +15,11 @@ const theaterSchema = new mongoose.Schema({
         required: true
     },
     screens: [{
-        name: String, // e.g., "Screen 1", "IMAX Screen"
+        name: String, // e.g., "Screen 1"
         type: String, // "Standard", "IMAX"
-        capacity: Number
+        capacity: Number,
+        rows: { type: Number, default: 8 },
+        cols: { type: Number, default: 10 }
     }]
 }, { timestamps: true });
 

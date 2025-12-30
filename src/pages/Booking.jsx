@@ -17,9 +17,19 @@ const Booking = () => {
     const [error, setError] = useState('');
     const [isRefreshing, setIsRefreshing] = useState(false);
 
-    // Constants for Seat Layout
-    const rows = 8;
-    const cols = 10;
+    // Dynamic Seat Layout
+    const getScreenLayout = () => {
+        if (!selectedShowtime || !selectedShowtime.theater || !selectedShowtime.theater.screens) {
+            return { rows: 8, cols: 10 }; // Default
+        }
+        const screenConfig = selectedShowtime.theater.screens.find(s => s.name === selectedShowtime.screen);
+        return {
+            rows: screenConfig?.rows || 8,
+            cols: screenConfig?.cols || 10
+        };
+    };
+
+    const { rows, cols } = getScreenLayout();
 
     // Fetch Movie and Showtimes
     useEffect(() => {
