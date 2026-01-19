@@ -9,7 +9,7 @@ const router = express.Router();
 // Configure Multer for local storage
 const storage = multer.diskStorage({
     destination: function (req, file, cb) {
-        cb(null, 'uploads/'); // Ensure this directory exists
+        cb(null, 'server/uploads/'); // Save to server/uploads relative to CWD (root)
     },
     filename: function (req, file, cb) {
         cb(null, 'movie-' + Date.now() + path.extname(file.originalname));

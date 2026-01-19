@@ -1,5 +1,6 @@
 import mongoose from 'mongoose';
 import Movie from './models/Movie.js';
+import User from './models/User.js';
 
 // Connection String
 const DB_URI = 'mongodb://127.0.0.1:27017/movie-booking';
@@ -250,6 +251,20 @@ const seedDB = async () => {
     try {
         await mongoose.connect(DB_URI);
         console.log("Connected to DB for seeding");
+
+        // Force delete existing admin to ensure password update
+        await User.deleteOne({ email: 'admin@example.com' });
+        console.log("Deleted any existing admin user");
+
+        // Create Admin User (Plaintext password to match backend)
+        await User.create({
+            name: 'Admin User',
+            email: 'admin@example.com',
+            password: 'admin123', // Plaintext
+            role: 'admin',
+            profileImage: 'https://ui-avatars.com/api/?name=Admin+User'
+        });
+        console.log("Admin user created: admin@example.com / admin123");
 
         // Clear existing movies
         await Movie.deleteMany({});

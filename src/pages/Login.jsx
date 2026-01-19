@@ -33,7 +33,13 @@ const Login = () => {
             // Store user info in localStorage (simple auth persistence)
             localStorage.setItem('user', JSON.stringify(data.user));
             localStorage.setItem('token', data.token);
-            navigate('/home');
+
+            if (data.user.role === 'admin') {
+                // Force a reload to ensure all admin states/routes are correctly loaded
+                window.location.href = '/admin';
+            } else {
+                navigate('/home');
+            }
         } catch (err) {
             setError(err.message);
         } finally {

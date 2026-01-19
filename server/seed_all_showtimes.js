@@ -36,35 +36,33 @@ mongoose.connect(process.env.MONGO_URI || 'mongodb://localhost:27017/movieBookin
         today.setHours(0, 0, 0, 0);
 
         for (const movie of movies) {
-            // Check if movie already has showtimes for today/tomorrow
-            const existingShows = await Showtime.find({ movie: movie._id });
+            // ALWAYS Clear existing showtimes for this movie to ensure fresh data
+            await Showtime.deleteMany({ movie: movie._id });
 
-            if (existingShows.length === 0) {
-                // Add showtimes for next 3 days
-                for (let i = 0; i < 3; i++) {
-                    const date = new Date(today);
-                    date.setDate(date.getDate() + i);
+            // Add showtimes for next 7 days (Dynamic Calendar)
+            for (let i = 0; i < 7; i++) {
+                const date = new Date(today);
+                date.setDate(date.getDate() + i);
 
-                    // 3 showtimes per day
-                    const times = [10, 14, 19]; // 10 AM, 2 PM, 7 PM
+                // 3 showtimes per day
+                const times = [10, 13, 16, 19, 22]; // 10 AM, 1 PM, 4 PM, 7 PM, 10 PM
 
-                    for (const hour of times) {
-                        const showTime = new Date(date);
-                        showTime.setHours(hour, 0, 0, 0);
+                for (const hour of times) {
+                    const showTime = new Date(date);
+                    showTime.setHours(hour, 0, 0, 0);
 
-                        await Showtime.create({
-                            movie: movie._id,
-                            theater: theater._id,
-                            screen: String(Math.floor(Math.random() * 5) + 1),
-                            startTime: showTime, // totalSeats removed as it's not in schema
-                            bookedSeats: [],
-                            price: 200
-                        });
-                        addedCount++;
-                    }
+                    await Showtime.create({
+                        movie: movie._id,
+                        theater: theater._id,
+                        screen: String(Math.floor(Math.random() * 5) + 1), // Random screen 1-5
+                        startTime: showTime,
+                        bookedSeats: [], // Reset seats
+                        price: 200 + (Math.random() > 0.5 ? 50 : 0) // Random price 200 or 250
+                    });
+                    addedCount++;
                 }
-                console.log(`Added showtimes for: ${movie.title}`);
             }
+            console.log(`Updated showtimes for: ${movie.title} (Next 7 days)`);
         }
 
         console.log(`\nSuccess! Added ${addedCount} new showtimes.`);
