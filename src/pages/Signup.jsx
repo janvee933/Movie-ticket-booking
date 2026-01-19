@@ -37,10 +37,11 @@ const Signup = () => {
                 throw new Error(data.message || 'Signup failed');
             }
 
-            // Signup successful
-            // You might want to auto-login here or redirect to login
+            // Signup successful - Auto login
+            localStorage.setItem('user', JSON.stringify(data.user));
             localStorage.setItem('token', data.token);
-            navigate('/login');
+
+            navigate('/home');
         } catch (err) {
             setError(err.message);
         } finally {

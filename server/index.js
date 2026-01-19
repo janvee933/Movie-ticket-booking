@@ -1,4 +1,22 @@
-import 'dotenv/config'; // Load env vars before other imports
+import dotenv from 'dotenv';
+import path from 'path';
+import { fileURLToPath } from 'url';
+
+// Helper to get __dirname in modules
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
+
+// Try to load .env from current directory
+dotenv.config();
+
+// If not found (or specific key missing), try parent directory
+if (!process.env.MONGO_URI) {
+    console.log("MONGO_URI not found in current directory .env, checking parent directory...");
+    dotenv.config({ path: path.resolve(__dirname, '../.env') });
+}
+
+console.log("Loaded MONGO_URI:", process.env.MONGO_URI ? "Defined" : "Undefined");
+
 import express from 'express';
 import mongoose from 'mongoose';
 import cors from 'cors';

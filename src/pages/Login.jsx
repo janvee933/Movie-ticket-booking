@@ -89,6 +89,32 @@ const Login = () => {
 
                 </form>
 
+                <div className="quick-login">
+                    <p className="quick-login-text">Quick Login (For Testing)</p>
+                    <div className="quick-login-buttons">
+                        <button
+                            type="button"
+                            className="btn btn-secondary"
+                            onClick={() => {
+                                setEmail('janvee84@gmail.com');
+                                setPassword('123456');
+                            }}
+                        >
+                            Demo User
+                        </button>
+                        <button
+                            type="button"
+                            className="btn btn-secondary"
+                            onClick={() => {
+                                setEmail('admin@example.com');
+                                setPassword('admin123');
+                            }}
+                        >
+                            Admin User
+                        </button>
+                    </div>
+                </div>
+
                 <div className="login-footer">
                     <p>Don't have an account? <Link to="/signup" className="highlight">Sign up</Link></p>
                 </div>
