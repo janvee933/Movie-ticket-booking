@@ -1,0 +1,202 @@
+/* Home Page Styling - Premium Overhaul */
+
+.home-page {
+    /* Ensure content doesn't hide behind fixed nav completely if not intended, 
+       but for Hero we usually want it to go under nav (transparent nav) */
+    position: relative;
+}
+
+/* Hero Section */
+.hero-section {
+    position: relative;
+    height: 95vh;
+    width: 100%;
+    overflow: hidden;
+    margin-bottom: var(--spacing-xl);
+}
+
+.hero-background {
+    position: absolute;
+    inset: 0;
+    z-index: 1;
+}
+
+.hero-img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: center 20%;
+    /* Focus slightly top */
+    transition: transform 10s ease;
+}
+
+/* Slow zoom effect on hover or auto */
+.hero-section:hover .hero-img {
+    transform: scale(1.05);
+}
+
+.hero-overlay {
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(to bottom,
+            rgba(5, 5, 7, 0.3) 0%,
+            rgba(5, 5, 7, 0.8) 60%,
+            #050507 100%);
+    z-index: 2;
+}
+
+.hero-gradient-overlay {
+    position: absolute;
+    inset: 0;
+    background: radial-gradient(circle at 80% 20%, rgba(118, 75, 162, 0.15), transparent 50%);
+    z-index: 2;
+    pointer-events: none;
+}
+
+.hero-content {
+    position: relative;
+    z-index: 10;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+    /* Text at bottom left */
+    padding-bottom: 100px;
+    max-width: 800px;
+}
+
+/* Hero Typography */
+.hero-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.5rem 1rem;
+    background: rgba(229, 9, 20, 0.2);
+    border: 1px solid rgba(229, 9, 20, 0.4);
+    color: #ff4d4d;
+    border-radius: var(--radius-full);
+    font-weight: 600;
+    font-size: 0.875rem;
+    margin-bottom: 1rem;
+    backdrop-filter: blur(5px);
+    width: fit-content;
+}
+
+.hero-title {
+    font-size: clamp(3rem, 6vw, 5rem);
+    /* Responsive giant text */
+    font-weight: 800;
+    line-height: 1.1;
+    margin-bottom: 1.5rem;
+    text-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+    background: linear-gradient(to right, #fff 50%, #ccc 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+}
+
+.hero-info {
+    display: flex;
+    align-items: center;
+    gap: 1.5rem;
+    margin-bottom: 2rem;
+    font-size: 1.125rem;
+    color: rgba(255, 255, 255, 0.9);
+}
+
+.info-item {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.rating-star {
+    filter: drop-shadow(0 0 5px rgba(255, 215, 0, 0.6));
+}
+
+.hero-description {
+    font-size: 1.1rem;
+    color: var(--color-text-muted);
+    line-height: 1.7;
+    margin-bottom: 2.5rem;
+    max-width: 600px;
+    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.8);
+}
+
+.hero-buttons {
+    display: flex;
+    gap: 1.5rem;
+}
+
+.play-icon-wrapper {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 24px;
+    height: 24px;
+    background: white;
+    border-radius: 50%;
+    color: black;
+}
+
+/* Sections */
+.section-wrapper {
+    margin-bottom: 5rem;
+    position: relative;
+}
+
+.section-header-styled {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+    margin-bottom: 2rem;
+    position: relative;
+    padding-left: 1rem;
+}
+
+.section-header-styled::before {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 5px;
+    bottom: 5px;
+    width: 4px;
+    background: var(--color-primary);
+    border-radius: 2px;
+    box-shadow: 0 0 10px var(--color-primary);
+}
+
+.section-title-large {
+    font-size: 2.5rem;
+    margin: 0;
+}
+
+.section-subtitle {
+    color: var(--color-text-muted);
+    font-size: 0.9rem;
+    margin-top: 0.25rem;
+}
+
+/* Movie Card Hover Effects for New Grid */
+.movie-card-hover {
+    transition: transform 0.3s ease, z-index 0s 0.3s;
+    cursor: pointer;
+}
+
+.movie-card-hover:hover {
+    transform: translateY(-5px) scale(1.02);
+    z-index: 10;
+    transition: transform 0.3s ease, z-index 0s;
+}
+
+.movie-card-hover:hover .card-img-top {
+    transform: scale(1.05);
+}
+
+.movie-card-hover .card-img-top {
+    transition: transform 0.5s ease;
+}
+
+/* Target the gradient overlay div we added in the JSX */
+.movie-card-hover:hover>div>div.position-absolute {
+    opacity: 1 !important;
+}

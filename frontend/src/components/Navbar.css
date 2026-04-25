@@ -1,0 +1,99 @@
+/* Custom Bootstrap Overrides */
+.custom-navbar {
+    background: linear-gradient(to bottom, rgba(15, 15, 19, 0.9) 0%, rgba(15, 15, 19, 0) 100%);
+    transition: all 0.3s ease;
+    padding: 1.5rem 0;
+}
+
+.custom-navbar.scrolled {
+    background: rgba(15, 15, 19, 0.95);
+    backdrop-filter: blur(10px);
+    padding: 1rem 0;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.logo {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-size: 1.5rem;
+    font-weight: 700;
+    font-family: var(--font-display);
+    text-decoration: none !important;
+    color: white !important;
+}
+
+.logo-icon {
+    color: #764ba2;
+}
+
+.highlight {
+    color: #764ba2;
+}
+
+.navbar-nav .nav-link {
+    color: var(--color-text-muted) !important;
+    font-weight: 500;
+    transition: color 0.2s;
+    position: relative;
+    margin: 0 1rem;
+}
+
+.navbar-nav .nav-link:hover,
+.navbar-nav .nav-link.active {
+    color: var(--color-text-main) !important;
+}
+
+.navbar-nav .nav-link.active {
+    color: var(--color-primary) !important;
+    font-weight: 600;
+}
+
+.navbar-nav .nav-link.active::after {
+    content: '';
+    position: absolute;
+    bottom: -4px;
+    left: 0;
+    width: 100%;
+    height: 2px;
+    background: var(--color-primary);
+    border-radius: 2px;
+    box-shadow: 0 0 8px var(--color-primary);
+}
+
+/* Search Input Override */
+.search-form {
+    width: auto;
+}
+
+.search-input {
+    border-color: rgba(255, 255, 255, 0.2) !important;
+    color: white !important;
+}
+
+.search-input::placeholder {
+    color: rgba(255, 255, 255, 0.5) !important;
+}
+
+.search-input:focus {
+    background: rgba(255, 255, 255, 0.1) !important;
+    border-color: var(--color-primary) !important;
+    box-shadow: none !important;
+}
+
+.search-btn {
+    border-color: rgba(255, 255, 255, 0.2) !important;
+}
+
+.search-btn:hover {
+    background: var(--color-primary) !important;
+    border-color: var(--color-primary) !important;
+}
+
+.lang-btn {
+    background: transparent;
+    border: none;
+    color: white;
+    display: flex;
+    align-items: center;
+}

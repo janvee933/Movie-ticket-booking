@@ -1,0 +1,130 @@
+.offers-page {
+    padding-top: 100px;
+    padding-bottom: 4rem;
+    min-height: 100vh;
+    background: var(--color-bg);
+}
+
+.offers-header {
+    text-align: center;
+    margin-bottom: 4rem;
+}
+
+.offers-title {
+    font-family: var(--font-display);
+    font-size: 3rem;
+    font-weight: 700;
+    margin-bottom: 1rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: linear-gradient(135deg, #fff 0%, #a5a5a5 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+}
+
+.offers-subtitle {
+    font-size: 1.25rem;
+    color: var(--color-text-muted);
+}
+
+.offers-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 2rem;
+}
+
+.offer-card {
+    background: rgba(255, 255, 255, 0.03);
+    border: 1px solid rgba(255, 255, 255, 0.05);
+    border-radius: var(--radius-lg);
+    overflow: hidden;
+    transition: all 0.3s ease;
+    position: relative;
+    backdrop-filter: blur(10px);
+}
+
+.offer-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 10px 30px -10px rgba(0, 0, 0, 0.5);
+    border-color: rgba(255, 255, 255, 0.1);
+}
+
+.offer-image-wrapper {
+    position: relative;
+    height: 200px;
+    overflow: hidden;
+}
+
+.offer-image {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 0.5s ease;
+}
+
+.offer-card:hover .offer-image {
+    transform: scale(1.05);
+}
+
+.offer-tag {
+    position: absolute;
+    top: 1rem;
+    left: 1rem;
+    background: rgba(0, 0, 0, 0.8);
+    backdrop-filter: blur(4px);
+    padding: 0.25rem 0.75rem;
+    border-radius: var(--radius-full);
+    font-size: 0.75rem;
+    font-weight: 600;
+    color: var(--color-accent);
+    display: flex;
+    align-items: center;
+    border: 1px solid rgba(255, 215, 0, 0.2);
+}
+
+.offer-content {
+    padding: 1.5rem;
+}
+
+.offer-code-container {
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid dashed rgba(255, 255, 255, 0.2);
+    border-radius: var(--radius-md);
+    padding: 0.75rem;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 1rem;
+}
+
+.offer-code {
+    font-family: monospace;
+    font-size: 1.125rem;
+    font-weight: 700;
+    letter-spacing: 1px;
+    color: var(--color-text-main);
+}
+
+.copy-btn {
+    font-size: 0.875rem;
+    color: var(--color-primary);
+    background: none;
+    border: none;
+    cursor: pointer;
+    font-weight: 500;
+    transition: color 0.2s;
+}
+
+.copy-btn:hover {
+    color: white;
+}
+
+.terms {
+    font-size: 0.8rem;
+    color: var(--color-text-muted);
+    display: flex;
+    align-items: center;
+    padding-top: 1rem;
+    border-top: 1px solid rgba(255, 255, 255, 0.05);
+}

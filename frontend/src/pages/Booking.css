@@ -1,0 +1,301 @@
+/* Cleaned Booking.css for Bootstrap Integration */
+.booking-page {
+    min-height: 100vh;
+    background: var(--color-bg);
+}
+
+.perspective-500 {
+    perspective: 500px;
+}
+
+.screen {
+    background: linear-gradient(to bottom, rgba(255, 255, 255, 0.3), transparent);
+    box-shadow: 0 20px 50px rgba(255, 255, 255, 0.1);
+    border-radius: 50% 50% 0 0 / 20px 20px 0 0;
+}
+
+.letter-spacing-2 {
+    letter-spacing: 2px;
+}
+
+.spin-anim {
+    animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+    from {
+        transform: rotate(0deg);
+    }
+
+    to {
+        transform: rotate(360deg);
+    }
+}
+
+.backdrop-blur {
+    backdrop-filter: blur(10px);
+}
+
+.d-hover-block {
+    display: none;
+}
+
+button:hover .d-hover-block {
+    display: block;
+}
+
+.slide-up-anim {
+    animation: slideUp 0.3s ease-out;
+}
+
+@keyframes slideUp {
+    from {
+        transform: translateY(100%);
+    }
+
+    to {
+        transform: translateY(0);
+    }
+}
+
+/* Coupon & Pricing UI */
+.coupon-section .form-control {
+    border-radius: var(--radius-sm) 0 0 var(--radius-sm) !important;
+    font-size: 0.85rem;
+    letter-spacing: 0.5px;
+}
+
+.coupon-section .btn {
+    border-radius: 0 var(--radius-sm) var(--radius-sm) 0 !important;
+    font-size: 0.85rem;
+    font-weight: 600;
+}
+
+.coupon-section .form-control:focus {
+    box-shadow: none;
+    border-color: var(--color-primary);
+    background-color: rgba(255, 255, 255, 0.1) !important;
+}
+
+.price-breakdown {
+    border-top: 1px solid rgba(255, 255, 255, 0.05);
+    padding-top: 1rem;
+}
+
+/* Visibility Fixes */
+.booking-page .text-muted {
+    color: #9ca3af !important;
+}
+
+.booking-page label.text-muted {
+    color: #cbd5e1 !important;
+    font-weight: 500;
+}
+
+.booking-page h2, 
+.booking-page h4, 
+.booking-page h5 {
+    color: #ffffff !important;
+}
+
+.spacing-1 {
+    letter-spacing: 1px;
+}
+
+/* High contrast for summary details */
+.booking-page .card .text-muted {
+    color: #cbd5e1 !important;
+}
+
+.booking-page .card .h5,
+.booking-page .card h4 {
+    color: #ffffff !important;
+}
+
+/* Ensure price and amount are standout */
+.text-primary {
+    color: #3b82f6 !important; /* Bright blue */
+}
+
+.text-success {
+    color: #10b981 !important; /* Bright green */
+}
+
+/* Payment Gateway Overhaul */
+.payment-tabs {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(110px, 1fr));
+    gap: 0.5rem;
+    margin-bottom: 1.5rem;
+}
+
+.payment-tab {
+    background: rgba(255, 255, 255, 0.02);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    padding: 0.75rem 0.5rem;
+    border-radius: 12px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.4rem;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    color: #94a3b8;
+    font-size: 0.85rem;
+}
+
+.payment-tab:hover {
+    background: rgba(255, 255, 255, 0.08);
+    border-color: rgba(255, 255, 255, 0.3);
+}
+
+.payment-tab.active {
+    background: rgba(59, 130, 246, 0.1);
+    border-color: #3b82f6;
+    color: #3b82f6;
+    box-shadow: 0 0 15px rgba(59, 130, 246, 0.15);
+}
+
+.tab-icon {
+    font-size: 1.5rem;
+}
+
+.payment-details-panel {
+    background: rgba(255, 255, 255, 0.02);
+    border-radius: 16px;
+    padding: 1.5rem;
+    border: 1px solid rgba(255, 255, 255, 0.05);
+    min-height: 200px;
+    animation: fadeIn 0.3s ease-out;
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(10px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+/* UPI Option Styles */
+.upi-apps {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1rem;
+    margin-bottom: 1.5rem;
+}
+
+.upi-app-btn {
+    background: #1e1e24;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    padding: 0.75rem;
+    border-radius: 10px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.4rem;
+    font-size: 0.75rem;
+    color: white;
+    cursor: pointer;
+    transition: all 0.2s;
+}
+
+.upi-app-btn:hover {
+    border-color: #3b82f6;
+}
+
+.upi-app-btn.selected {
+    border-color: #3b82f6;
+    background: rgba(59, 130, 246, 0.1);
+}
+
+/* Card Mock Styles */
+.card-form-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 1rem;
+}
+
+.visa-card-mock {
+    background: linear-gradient(135deg, #1e3a8a 0%, #3b82f6 100%);
+    height: 180px;
+    border-radius: 15px;
+    padding: 1.5rem;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    margin-bottom: 1.5rem;
+    box-shadow: 0 10px 20px rgba(0,0,0,0.4);
+    position: relative;
+    overflow: hidden;
+}
+
+.visa-card-mock::after {
+    content: '';
+    position: absolute;
+    top: 0; right: 0;
+    width: 200px; height: 180px;
+    background: radial-gradient(circle, rgba(255,255,255,0.1) 0%, transparent 70%);
+    pointer-events: none;
+}
+
+/* QR Code Mock */
+.qr-container {
+    background: white;
+    padding: 1.5rem;
+    border-radius: 15px;
+    width: 200px;
+    margin: 0 auto 1.5rem;
+    position: relative;
+}
+
+.qr-code-img {
+    width: 100%;
+}
+
+.payment-timer {
+    text-align: center;
+    font-family: monospace;
+    color: #e50914;
+}
+
+.hover-border-primary:hover {
+    border-color: #3b82f6 !important;
+    background: rgba(59, 130, 246, 0.05) !important;
+}
+
+@keyframes spin-slow {
+    0% { transform: translateY(0px) rotate(0deg); }
+    50% { transform: translateY(-10px) rotate(5deg); }
+    100% { transform: translateY(0px) rotate(0deg); }
+}
+
+.spin-anim {
+    animation: spin-slow 2s ease-in-out infinite;
+}
+
+/* Processing Overlay */
+.payment-processing-overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(5, 5, 7, 0.9);
+    backdrop-filter: blur(10px);
+    z-index: 9999;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    animation: fadeIn 0.4s ease-out;
+}
+
+.processing-content {
+    text-align: center;
+}
+
+.success-icon-anim {
+    color: #10b981;
+    animation: bounceIn 0.6s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+@keyframes bounceIn {
+    0% { transform: scale(0); }
+    70% { transform: scale(1.1); }
+    100% { transform: scale(1); }
+}
