@@ -172,6 +172,10 @@ app.post('/api/auth/google', async (req, res) => {
     }
 });
 
+// Serve Frontend Static Files
+const frontendPath = path.join(__dirname, '../frontend/dist');
+app.use(express.static(frontendPath));
+
 // Profile / Session Validation Route
 app.get('/api/auth/me', async (req, res) => {
     try {
@@ -187,6 +191,11 @@ app.get('/api/auth/me', async (req, res) => {
     } catch (error) {
         res.status(401).json({ message: 'Invalid session' });
     }
+});
+
+// Catch-all route to serve frontend index.html for any non-API routes
+app.get('*', (req, res) => {
+    res.sendFile(path.join(frontendPath, 'index.html'));
 });
 
 app.listen(PORT, () => {
