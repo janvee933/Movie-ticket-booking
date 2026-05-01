@@ -271,7 +271,7 @@ export const movies = [
         genre: "Action/Comedy",
         category: "Hollywood",
         rating: 4.8,
-        image: "http://localhost:5000/uploads/deadpool.png",
+        image: "/uploads/deadpool.png",
         description: "Wolverine is recovering from his injuries when he crosses paths with the loudmouth, Deadpool. They team up to defeat a common enemy.",
         trailerUrl: "https://www.youtube.com/embed/73_1biulkYk"
     },
@@ -281,7 +281,7 @@ export const movies = [
         genre: "Sci-Fi/Action",
         category: "Tollywood",
         rating: 4.7,
-        image: "http://localhost:5000/uploads/kalki.png",
+        image: "/uploads/kalki.png",
         description: "A modern-day avatar of Vishnu, a Hindu god, who is believed to have descended to earth to protect the world from evil forces.",
         trailerUrl: "https://www.youtube.com/embed/k8K6216Xv3g"
     },
@@ -291,7 +291,7 @@ export const movies = [
         genre: "Action/Thriller",
         category: "Bollywood",
         rating: 4.5,
-        image: "http://localhost:5000/uploads/fighter.png",
+        image: "/uploads/fighter.png",
         description: "Top aviators of the IAF come together in the face of imminent danger, forming Air Dragons. Fighter unfolds their camaraderie, brotherhood and battles, internal and external.",
         trailerUrl: "https://www.youtube.com/embed/9h30g84e03U"
     },
@@ -301,7 +301,7 @@ export const movies = [
         genre: "Animation",
         category: "Hollywood",
         rating: 4.6,
-        image: "http://localhost:5000/uploads/panda.png",
+        image: "/uploads/panda.png",
         description: "Po must train a new warrior when he's chosen to become the spiritual leader of the Valley of Peace. However, when a powerful shape-shifting sorceress sets her eyes on his Staff of Wisdom, he suddenly realizes he's going to need some help.",
         trailerUrl: "https://www.youtube.com/embed/_inKs4eeHiI"
     },
@@ -311,7 +311,7 @@ export const movies = [
         genre: "Horror/Thriller",
         category: "Bollywood",
         rating: 4.4,
-        image: "http://localhost:5000/uploads/shaitaan.png",
+        image: "/uploads/shaitaan.png",
         description: "A timeless tale of battle between good and evil with a family embodying the forces of righteousness while a man symbolizes malevolence.",
         trailerUrl: "https://www.youtube.com/embed/K30s3tS2a7w"
     },
@@ -332,7 +332,7 @@ export const movies = [
         genre: "Action/Sci-Fi",
         category: "Hollywood",
         rating: 4.7,
-        image: "http://localhost:5000/uploads/godzilla_kong.png",
+        image: "/uploads/godzilla_kong.png",
         description: "Two ancient titans, Godzilla and Kong, clash in an epic battle as humans unravel their intertwined origins and connection to Skull Island's mysteries.",
         trailerUrl: "https://www.youtube.com/embed/lV1OOlGwExM"
     },
@@ -342,7 +342,7 @@ export const movies = [
         genre: "Horror/Comedy",
         category: "Bollywood",
         rating: 4.8,
-        image: "http://localhost:5000/uploads/stree_2.png",
+        image: "/uploads/stree_2.png",
         description: "The town of Chanderi is haunted again. This time, the men must find a way to save themselves from a new terrifying entity.",
         trailerUrl: "https://www.youtube.com/embed/KvqSp3a_vjA"
     },
@@ -352,7 +352,7 @@ export const movies = [
         genre: "Action",
         category: "Tollywood",
         rating: 4.6,
-        image: "http://localhost:5000/uploads/salaar.png",
+        image: "/uploads/salaar.png",
         description: "A gang leader makes a promise to a dying friend and takes on other criminal gangs in a violent battle for power.",
         trailerUrl: "https://www.youtube.com/embed/H7lq2G_QzY8"
     }
