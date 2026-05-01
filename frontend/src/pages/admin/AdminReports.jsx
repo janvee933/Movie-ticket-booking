@@ -5,7 +5,7 @@ import { useAuth } from '../../context/AuthContext';
 import './AdminPages.css';
 
 const AdminReports = () => {
-    const { adminToken } = useAuth();
+    const { adminToken, superAdminToken } = useAuth();
     const [revenueData, setRevenueData] = useState([]);
     const [stats, setStats] = useState({ totalRevenue: 0, totalBookings: 0, avgTicketPrice: 0 });
     const [loading, setLoading] = useState(true);
@@ -13,7 +13,7 @@ const AdminReports = () => {
     useEffect(() => {
         const fetchReportData = async () => {
             try {
-                const token = adminToken || localStorage.getItem('admin_token');
+                const token = superAdminToken || adminToken || localStorage.getItem('superadmin_token') || localStorage.getItem('admin_token');
                 // Fetch chart data
                 const revRes = await fetch('/api/admin/revenue-stats', {
                     headers: { 'Authorization': `Bearer ${token}` }

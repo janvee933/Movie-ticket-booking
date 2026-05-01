@@ -14,7 +14,8 @@ console.log("Loaded MONGO_URI:", process.env.MONGO_URI ? "Defined" : "Undefined"
 import express from 'express';
 import mongoose from 'mongoose';
 import cors from 'cors';
-import { generateToken } from './middleware/auth.js';
+import jwt from 'jsonwebtoken';
+import { generateToken, JWT_SECRET } from './middleware/auth.js';
 import User from './models/User.js';
 import movieRoutes from './routes/movies.js';
 
@@ -25,6 +26,7 @@ import adminRoutes from './routes/admin.js';
 import userRoutes from './routes/users.js';
 import recommendationRoutes from './routes/recommendations.js';
 import offerRoutes from './routes/offers.js';
+import paymentRoutes from './routes/payments.js';
 
 const app = express();
 // Use SERVER_PORT if available, otherwise default to 5000. 
@@ -51,6 +53,7 @@ app.use('/api/admin', adminRoutes);
 app.use('/api/users', userRoutes);
 app.use('/api/recommendations', recommendationRoutes);
 app.use('/api/offers', offerRoutes);
+app.use('/api/payments', paymentRoutes);
 
 
 
@@ -161,6 +164,23 @@ app.post('/api/auth/google', async (req, res) => {
     } catch (error) {
         console.error('Google Sign-In error:', error);
         res.status(500).json({ message: 'Server error during Google Sign-In' });
+    }
+});
+
+// Profile / Session Validation Route
+app.get('/api/auth/me', async (req, res) => {
+    try {
+        const token = req.headers.authorization?.split(' ')[1];
+        if (!token) return res.status(401).json({ message: 'No token' });
+
+        const decoded = jwt.verify(token, JWT_SECRET);
+        const user = await User.findById(decoded.id).select('-password');
+        
+        if (!user) return res.status(404).json({ message: 'User not found' });
+        
+        res.json(user);
+    } catch (error) {
+        res.status(401).json({ message: 'Invalid session' });
     }
 });
 

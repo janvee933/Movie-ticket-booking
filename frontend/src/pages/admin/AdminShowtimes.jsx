@@ -32,9 +32,13 @@ const AdminShowtimes = () => {
                 fetch('/api/theaters')
             ]);
 
-            setShowtimes(await showtimesRes.json());
-            setMovies(await moviesRes.json());
-            setTheaters(await theatersRes.json());
+            const stData = await showtimesRes.json();
+            const mvData = await moviesRes.json();
+            const thData = await theatersRes.json();
+
+            setShowtimes(Array.isArray(stData) ? stData : []);
+            setMovies(Array.isArray(mvData) ? mvData : []);
+            setTheaters(Array.isArray(thData) ? thData : []);
             setLoading(false);
         } catch (error) {
             console.error('Error fetching data:', error);
@@ -49,13 +53,20 @@ const AdminShowtimes = () => {
     const openSeatControl = async (show) => {
         setSelectedShow(show);
         setIsSeatModalOpen(true);
+        // Use show.bookedSeats as immediate fallback
+        setBookedSeats(Array.isArray(show.bookedSeats) ? show.bookedSeats : []);
+        
         try {
-            const token = adminToken || localStorage.getItem('admin_token');
+            const token = adminToken || superAdminToken || localStorage.getItem('admin_token') || localStorage.getItem('superadmin_token');
             const res = await fetch(`/api/admin/showtimes/${show._id}/seats`, {
                 headers: { 'Authorization': `Bearer ${token}` }
             });
             const data = await res.json();
-            setBookedSeats(data.bookedSeats || []);
+            
+            // Merge with existing if any, or just set new
+            const apiSeats = Array.isArray(data.bookedSeats) ? data.bookedSeats : [];
+            const mergedSeats = [...new Set([...(show.bookedSeats || []), ...apiSeats])];
+            setBookedSeats(mergedSeats);
         } catch (error) {
             console.error('Error fetching seats:', error);
         }
@@ -63,7 +74,7 @@ const AdminShowtimes = () => {
 
     const handleSubmit = async (e) => {
         e.preventDefault();
-        const token = adminToken || localStorage.getItem('admin_token');
+        const token = adminToken || superAdminToken || localStorage.getItem('admin_token') || localStorage.getItem('superadmin_token');
         const combinedDate = new Date(`${formData.date}T${formData.startTime}`);
 
         const payload = {
@@ -116,32 +127,40 @@ const AdminShowtimes = () => {
             <div className="seat-control-grid" style={{ 
                 display: 'grid', 
                 gridTemplateColumns: `repeat(${cols}, 1fr)`, 
-                gap: '8px',
-                padding: '20px',
-                background: 'rgba(0,0,0,0.2)',
-                borderRadius: '12px'
+                gap: '10px',
+                padding: '25px',
+                background: 'rgba(0,0,0,0.3)',
+                borderRadius: '16px',
+                border: '1px solid rgba(255,255,255,0.05)',
+                boxShadow: 'inset 0 0 20px rgba(0,0,0,0.2)'
             }}>
                 {Array.from({ length: rows }).map((_, r) => (
                     Array.from({ length: cols }).map((_, c) => {
                         const seatId = `${alphabet[r]}${c + 1}`;
-                        const isBooked = bookedSeats.includes(seatId);
+                        const isBooked = Array.isArray(bookedSeats) && bookedSeats.some(s => 
+                            s.toString().trim().toUpperCase() === seatId.toUpperCase()
+                        );
                         return (
                             <div 
                                 key={seatId} 
                                 className={`seat-item-admin ${isBooked ? 'booked' : 'available'}`}
-                                title={seatId}
+                                title={isBooked ? `Booked: ${seatId}` : `Available: ${seatId}`}
                                 style={{
-                                    width: '30px',
-                                    height: '30px',
+                                    width: '34px',
+                                    height: '34px',
                                     borderRadius: '6px',
-                                    background: isBooked ? '#ef4444' : 'rgba(255,255,255,0.1)',
+                                    background: isBooked ? '#ffc107' : 'rgba(255,255,255,0.03)',
+                                    boxShadow: isBooked ? '0 0 15px rgba(255, 193, 7, 0.4)' : 'none',
                                     display: 'flex',
                                     alignItems: 'center',
                                     justifyContent: 'center',
-                                    fontSize: '0.7rem',
+                                    fontSize: '0.75rem',
+                                    fontWeight: '900',
                                     cursor: 'default',
-                                    color: isBooked ? 'white' : 'rgba(255,255,255,0.5)',
-                                    border: isBooked ? 'none' : '1px solid rgba(255,255,255,0.1)'
+                                    color: isBooked ? '#000' : 'rgba(255,255,255,0.2)',
+                                    border: isBooked ? '2px solid #fff' : '1px solid rgba(255,255,255,0.1)',
+                                    transition: 'all 0.2s ease',
+                                    transform: isBooked ? 'scale(1.1)' : 'scale(1)'
                                 }}
                             >
                                 {seatId}
@@ -209,7 +228,11 @@ const AdminShowtimes = () => {
                                 </td>
                                 <td><span className="text-success fw-bold">₹{show.price}</span></td>
                                 <td>
-                                    <button onClick={() => openSeatControl(show)} className="btn-glass px-3 py-1 rounded-pill small" style={{ fontSize: '0.8rem' }}>
+                                    <button 
+                                        onClick={() => openSeatControl(show)} 
+                                        className="btn-primary-add px-3 py-1 rounded-pill small" 
+                                        style={{ fontSize: '0.8rem', background: 'var(--color-primary)', color: 'black', fontWeight: 'bold', border: 'none' }}
+                                    >
                                         <Armchair size={14} className="me-1" /> View Seats
                                     </button>
                                 </td>
@@ -287,7 +310,12 @@ const AdminShowtimes = () => {
             {/* Seat Control Modal */}
             <Modal show={isSeatModalOpen} onHide={() => setIsSeatModalOpen(false)} centered size="lg" contentClassName="modal-content">
                 <div className="modal-header border-bottom-0 pb-0">
-                    <h5 className="modal-title">Seat Availability - {selectedShow?.movie?.title}</h5>
+                    <div className="d-flex justify-content-between align-items-center w-100">
+                        <h5 className="modal-title">Seat Availability - {selectedShow?.movie?.title}</h5>
+                        <button className="btn btn-outline-light btn-sm rounded-circle me-3" onClick={() => openSeatControl(selectedShow)} title="Refresh Seats">
+                            <Clock size={16} />
+                        </button>
+                    </div>
                     <button className="btn-close" onClick={() => setIsSeatModalOpen(false)}><X size={20} /></button>
                 </div>
                 <div className="modal-body text-center">

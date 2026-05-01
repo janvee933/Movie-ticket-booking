@@ -33,26 +33,78 @@ export const AuthProvider = ({ children }) => {
     const [admin, setAdmin] = useState(() => safeParse('admin_user', null));
     const [adminToken, setAdminToken] = useState(localStorage.getItem('admin_token'));
 
+    const [superAdmin, setSuperAdmin] = useState(() => safeParse('superadmin_user', null));
+    const [superAdminToken, setSuperAdminToken] = useState(localStorage.getItem('superadmin_token'));
+
     const [isAuthModalOpen, setIsAuthModalOpen] = useState(false);
     const [redirectPath, setRedirectPath] = useState(null);
 
-    // Sync state across tabs - updated for dual sessions
+    // Periodic session validation to sync roles from backend
     useEffect(() => {
-        const handleStorageChange = (e) => {
-            const keys = ['token', 'user', 'admin_token', 'admin_user'];
-            if (keys.includes(e.key)) {
-                setUser(safeParse('user', null));
-                setToken(localStorage.getItem('token'));
-                setAdmin(safeParse('admin_user', null));
-                setAdminToken(localStorage.getItem('admin_token'));
+        const validateSession = async () => {
+            const sessions = [
+                { key: 'user', token: localStorage.getItem('token') },
+                { key: 'admin', token: localStorage.getItem('admin_token') },
+                { key: 'superadmin', token: localStorage.getItem('superadmin_token') }
+            ];
+
+            for (const session of sessions) {
+                if (!session.token) continue;
+
+                try {
+                    const res = await fetch('/api/auth/me', {
+                        headers: { 'Authorization': `Bearer ${session.token}` }
+                    });
+
+                    if (res.ok) {
+                        // Success - session is valid
+                    } else if (res.status === 401) {
+                        console.warn(`Auth: Session for ${session.key} expired (401). Logging out.`);
+                        logout(session.key);
+                    }
+                } catch (error) {
+                    console.debug(`Auth: Network check skipped for ${session.key}`);
+                }
             }
         };
-        window.addEventListener('storage', handleStorageChange);
-        return () => window.removeEventListener('storage', handleStorageChange);
+
+        validateSession();
+        const interval = setInterval(validateSession, 10000); // 10s is plenty for background sync
+        return () => clearInterval(interval);
     }, []);
 
+    // (Cross-tab sync disabled for strict session isolation as requested)
+
+    const clearAllSessions = () => {
+        setUser(null);
+        setToken(null);
+        setAdmin(null);
+        setAdminToken(null);
+        setSuperAdmin(null);
+        setSuperAdminToken(null);
+
+        const keys = ['token', 'user', 'admin_token', 'admin_user', 'superadmin_token', 'superadmin_user'];
+        keys.forEach(key => localStorage.removeItem(key));
+    };
+
     const login = (userData, userToken) => {
-        if (userData.role === 'admin') {
+        // Identity Check: If a different user ID is logging in, 
+        // we MUST clear all previous sessions for security.
+        const currentUserId = (user?.id || user?._id) || (admin?.id || admin?._id) || (superAdmin?.id || superAdmin?._id);
+        const newUserId = userData.id || userData._id;
+
+        if (currentUserId && currentUserId !== newUserId) {
+            console.log("Identity mismatch: clearing previous user sessions.");
+            clearAllSessions();
+        }
+
+        // Additive Login: Strictly set only the bucket for the role returned
+        if (userData.role === 'superadmin') {
+            setSuperAdmin(userData);
+            setSuperAdminToken(userToken);
+            localStorage.setItem('superadmin_user', JSON.stringify(userData));
+            localStorage.setItem('superadmin_token', userToken);
+        } else if (userData.role === 'admin') {
             setAdmin(userData);
             setAdminToken(userToken);
             localStorage.setItem('admin_user', JSON.stringify(userData));
@@ -65,8 +117,15 @@ export const AuthProvider = ({ children }) => {
         }
     };
 
-    const logout = (role = 'user') => {
-        if (role === 'admin') {
+    const logout = (role = 'all') => {
+        if (role === 'all') {
+            clearAllSessions();
+        } else if (role === 'superadmin') {
+            setSuperAdmin(null);
+            setSuperAdminToken(null);
+            localStorage.removeItem('superadmin_user');
+            localStorage.removeItem('superadmin_token');
+        } else if (role === 'admin') {
             setAdmin(null);
             setAdminToken(null);
             localStorage.removeItem('admin_user');
@@ -94,8 +153,11 @@ export const AuthProvider = ({ children }) => {
         token,
         admin,
         adminToken,
+        superAdmin,
+        superAdminToken,
         isAuthenticated: !!token,
         isAdminAuthenticated: !!adminToken,
+        isSuperAdminAuthenticated: !!superAdminToken,
         isAuthModalOpen,
         redirectPath,
         login,

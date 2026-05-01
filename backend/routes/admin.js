@@ -96,7 +96,7 @@ router.get('/revenue-stats', verifyToken, verifyAdmin, async (req, res) => {
 // Get Seat Status for Admin Control
 router.get('/showtimes/:id/seats', verifyToken, verifyAdmin, async (req, res) => {
     try {
-        const bookings = await Booking.find({ showtime: req.params.id, status: 'confirmed' });
+        const bookings = await Booking.find({ showtime: req.params.id });
         const bookedSeats = bookings.flatMap(b => b.seats);
         res.json({ bookedSeats });
     } catch (error) {

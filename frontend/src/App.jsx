@@ -19,7 +19,9 @@ import Loader from './components/Loader';
 import MainLayout from './components/MainLayout';
 import AdminLayout from './components/AdminLayout';
 import AdminRoute from './components/AdminRoute';
+import SuperAdminRoute from './components/SuperAdminRoute';
 import UserRoute from './components/UserRoute';
+import SuperAdminLayout from './components/SuperAdminLayout';
 import Dashboard from './pages/admin/Dashboard';
 import AdminMovies from './pages/admin/AdminMovies';
 import AdminTheaters from './pages/admin/AdminTheaters';
@@ -28,6 +30,10 @@ import AdminBookings from './pages/admin/AdminBookings';
 import AdminOffers from './pages/admin/AdminOffers';
 import AdminUsers from './pages/admin/AdminUsers';
 import AdminReports from './pages/admin/AdminReports';
+import SuperAdminDashboard from './pages/admin/SuperAdminDashboard';
+import SuperAdminSettings from './pages/admin/SuperAdminSettings';
+import SuperAdminTheaters from './pages/admin/SuperAdminTheaters';
+import SuperAdminPayments from './pages/admin/SuperAdminPayments';
 
 function App() {
   const [loading, setLoading] = React.useState(true);
@@ -77,6 +83,18 @@ function App() {
           <Route path="users" element={<AdminUsers />} />
           <Route path="reports" element={<AdminReports />} />
           <Route path="offers" element={<AdminOffers />} />
+        </Route>
+      </Route>
+      {/* SuperAdmin Routes */}
+      <Route element={<SuperAdminRoute />}>
+        <Route path="/superadmin" element={<SuperAdminLayout />}>
+          <Route index element={<SuperAdminDashboard />} />
+          <Route path="users" element={<AdminUsers />} />
+          <Route path="admins" element={<AdminUsers />} />
+          <Route path="theaters" element={<SuperAdminTheaters />} />
+          <Route path="payments" element={<SuperAdminPayments />} />
+          <Route path="reports" element={<AdminReports />} />
+          <Route path="settings" element={<SuperAdminSettings />} />
         </Route>
       </Route>
     </Routes>

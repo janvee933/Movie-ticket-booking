@@ -4,7 +4,7 @@ import { useAuth } from '../../context/AuthContext';
 import './AdminPages.css';
 
 const AdminBookings = () => {
-    const { adminToken } = useAuth();
+    const { adminToken, superAdminToken } = useAuth();
     const [bookings, setBookings] = useState([]);
     const [loading, setLoading] = useState(true);
     const [search, setSearch] = useState('');
@@ -14,13 +14,13 @@ const AdminBookings = () => {
     }, []);
 
     const fetchBookings = async () => {
-        const token = adminToken || localStorage.getItem('admin_token');
+        const token = adminToken || superAdminToken || localStorage.getItem('admin_token') || localStorage.getItem('superadmin_token');
         try {
             const res = await fetch('/api/bookings', {
                 headers: { 'Authorization': `Bearer ${token}` }
             });
             const data = await res.json();
-            setBookings(data);
+            setBookings(Array.isArray(data) ? data : []);
             setLoading(false);
         } catch (error) {
             console.error(error);
@@ -28,11 +28,11 @@ const AdminBookings = () => {
         }
     };
 
-    const filteredBookings = bookings.filter(b => 
+    const filteredBookings = Array.isArray(bookings) ? bookings.filter(b => 
         b.user?.name?.toLowerCase().includes(search.toLowerCase()) ||
         b.customerName?.toLowerCase().includes(search.toLowerCase()) ||
         b.showtime?.movie?.title?.toLowerCase().includes(search.toLowerCase())
-    );
+    ) : [];
 
     if (loading) return <div className="admin-page-container">Loading bookings...</div>;
 

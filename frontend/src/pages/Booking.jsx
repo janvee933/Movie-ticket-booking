@@ -88,7 +88,27 @@ const Booking = () => {
             }
         };
         fetchData();
-    }, [id]);
+
+        // Polling for live seat updates every 10 seconds
+        const pollInterval = setInterval(async () => {
+            if (bookingStep === 1) { // Only poll when on selection screen
+                try {
+                    const res = await fetch(`/api/showtimes?movie=${id}`);
+                    if (res.ok) {
+                        const data = await res.json();
+                        setShowtimes(data);
+                        // Update selected showtime object to get new bookedSeats
+                        if (selectedShowtime) {
+                            const updated = data.find(s => s._id === selectedShowtime._id);
+                            if (updated) setSelectedShowtime(updated);
+                        }
+                    }
+                } catch (e) { console.error("Poll error:", e); }
+            }
+        }, 10000);
+
+        return () => clearInterval(pollInterval);
+    }, [id, bookingStep]); // Re-run effect when step changes to start/stop polling
 
     // Handle Refresh
     const handleRefresh = async () => {
@@ -209,6 +229,23 @@ const Booking = () => {
     const handleBooking = () => {
         if (selectedSeats.length === 0) return;
         setBookingStep(2);
+        window.scrollTo(0, 0);
+    };
+
+    const handleBackToSeats = () => {
+        setBookingStep(1);
+        window.scrollTo(0, 0);
+    };
+
+    // Load Razorpay Script
+    const loadRazorpay = () => {
+        return new Promise((resolve) => {
+            const script = document.createElement('script');
+            script.src = 'https://checkout.razorpay.com/v1/checkout.js';
+            script.onload = () => resolve(true);
+            script.onerror = () => resolve(false);
+            document.body.appendChild(script);
+        });
     };
 
     const confirmBooking = async () => {
@@ -220,65 +257,123 @@ const Booking = () => {
             alert("Please enter your mobile number.");
             return;
         }
-        
-        if (paymentMethod === 'upi' && !upiId && !upiApp) {
-            alert("Please enter UPI ID or select an app.");
-            return;
-        }
 
         setIsProcessing(true);
-        
-        try {
-            if (paymentMethod === 'upi' || paymentMethod === 'qr' || paymentMethod === 'wallet' || paymentMethod === 'netbanking') {
-                setPaymentStage('verifying');
-                await new Promise(resolve => setTimeout(resolve, 1500));
-                
-                setPaymentStage('approving');
-                // Longer delay for user to "approve" on mobile
-                await new Promise(resolve => setTimeout(resolve, 3000));
-                setPaymentStage('success');
-            } else if (paymentMethod === 'card') {
-                setPaymentStage('verifying');
-                await new Promise(resolve => setTimeout(resolve, 2000));
-                setPaymentStage('success');
-            } else {
-                // Cash - immediate
-                setPaymentStage('success');
-            }
 
+        try {
             const token = localStorage.getItem('token');
-            const res = await fetch('/api/bookings', {
+            const totalAmount = calculateTotal();
+
+            // 1. Create Order on Backend
+            const orderRes = await fetch('/api/payments/order', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
                     'Authorization': `Bearer ${token}`
                 },
                 body: JSON.stringify({
-                    showtimeId: selectedShowtime._id,
-                    seats: selectedSeats.map(s => s.id),
-                    totalAmount: calculateTotal(),
-                    paymentMethod,
-                    phoneNumber,
-                    couponCode: appliedCoupon?.code || null,
-                    customerName
+                    amount: totalAmount,
+                    currency: 'INR',
+                    receipt: `rcpt_${Math.random().toString(36).substring(7)}`
                 })
             });
 
-            const data = await res.json();
-            if (res.ok) {
-                setPaymentSuccess(true);
-                await new Promise(resolve => setTimeout(resolve, 1500));
-                navigate(`/booking-success/${data._id}`);
-            } else {
-                alert(data.message || "Booking failed.");
+            if (!orderRes.ok) throw new Error("Order creation failed");
+            const order = await orderRes.json();
+
+            // 2. Load Razorpay
+            const isLoaded = await loadRazorpay();
+            if (!isLoaded) {
+                alert("Razorpay SDK failed to load. Are you online?");
                 setIsProcessing(false);
-                setPaymentStage('none');
+                return;
             }
+
+            // 3. Open Razorpay Checkout
+            const options = {
+                key: 'rzp_test_your_key_id', // REPLACE WITH REAL KEY
+                amount: order.amount,
+                currency: order.currency,
+                name: "CineTicket",
+                description: `Booking for ${movie.title}`,
+                image: movie.image,
+                order_id: order.id,
+                handler: async function (response) {
+                    setPaymentStage('verifying');
+                    
+                    // Verify payment on backend
+                    const verifyRes = await fetch('/api/payments/verify', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                            'Authorization': `Bearer ${token}`
+                        },
+                        body: JSON.stringify({
+                            razorpay_order_id: response.razorpay_order_id,
+                            razorpay_payment_id: response.razorpay_payment_id,
+                            razorpay_signature: response.razorpay_signature
+                        })
+                    });
+
+                    const verifyData = await verifyRes.json();
+
+                    if (verifyData.success) {
+                        setPaymentStage('success');
+                        
+                        // Finalize Booking
+                        const bookingRes = await fetch('/api/bookings', {
+                            method: 'POST',
+                            headers: {
+                                'Content-Type': 'application/json',
+                                'Authorization': `Bearer ${token}`
+                            },
+                            body: JSON.stringify({
+                                showtimeId: selectedShowtime._id,
+                                seats: selectedSeats.map(s => s.id),
+                                totalAmount: totalAmount,
+                                paymentMethod: 'online', // Razorpay
+                                phoneNumber,
+                                customerName,
+                                paymentId: response.razorpay_payment_id,
+                                orderId: response.razorpay_order_id
+                            })
+                        });
+
+                        const bookingData = await bookingRes.json();
+                        if (bookingRes.ok) {
+                            setPaymentSuccess(true);
+                            navigate(`/booking-success/${bookingData._id}`);
+                        } else {
+                            alert(bookingData.message || "Booking finalization failed.");
+                        }
+                    } else {
+                        alert("Payment verification failed.");
+                    }
+                    setIsProcessing(false);
+                    setPaymentStage('none');
+                },
+                prefill: {
+                    name: customerName,
+                    contact: phoneNumber,
+                    email: user?.email || ""
+                },
+                theme: {
+                    color: "#e50914"
+                },
+                modal: {
+                    ondismiss: function() {
+                        setIsProcessing(false);
+                    }
+                }
+            };
+
+            const rzp = new window.Razorpay(options);
+            rzp.open();
+
         } catch (error) {
-            console.error("Booking error:", error);
-            alert("Something went wrong.");
+            console.error("Razorpay error:", error);
+            alert("Something went wrong with Razorpay.");
             setIsProcessing(false);
-            setPaymentStage('none');
         }
     };
 
@@ -292,6 +387,23 @@ const Booking = () => {
                 <Button variant="link" onClick={() => bookingStep === 2 ? setBookingStep(1) : navigate(-1)} className="text-decoration-none text-white-50 mb-3 ps-0">
                     <ArrowLeft size={20} /> {bookingStep === 2 ? 'Back to Seats' : 'Back'}
                 </Button>
+
+                {/* Step Indicator */}
+                <div className="booking-steps mb-5">
+                    <div className={`step-item ${bookingStep >= 1 ? 'active' : ''}`} onClick={() => bookingStep === 2 && setBookingStep(1)}>
+                        <div className="step-count">1</div>
+                        <div className="step-info">
+                            <span className="step-title">Select Seats</span>
+                        </div>
+                    </div>
+                    <div className={`step-line ${bookingStep >= 2 ? 'active' : ''}`}></div>
+                    <div className={`step-item ${bookingStep >= 2 ? 'active' : ''}`}>
+                        <div className="step-count">2</div>
+                        <div className="step-info">
+                            <span className="step-title">Checkout</span>
+                        </div>
+                    </div>
+                </div>
 
                 <Row className="g-5">
                     {/* Left Column: Selection & Seats */}
@@ -424,7 +536,17 @@ const Booking = () => {
                             </>
                         ) : (
                             <div className="checkout-selection slide-in">
-                                <h2 className="mb-4 fw-bold">Checkout</h2>
+                                <div className="d-flex align-items-center gap-3 mb-4">
+                                    <Button 
+                                        variant="outline-secondary" 
+                                        size="sm" 
+                                        className="rounded-circle p-2" 
+                                        onClick={handleBackToSeats}
+                                    >
+                                        <ArrowLeft size={18} />
+                                    </Button>
+                                    <h2 className="mb-0 fw-bold">Checkout</h2>
+                                </div>
                                 
                                 <div className="bg-dark bg-opacity-50 p-4 rounded-3 mb-4 border border-secondary border-opacity-25">
                                     <h5 className="mb-4 text-uppercase fs-6 text-muted spacing-1">Contact Information</h5>

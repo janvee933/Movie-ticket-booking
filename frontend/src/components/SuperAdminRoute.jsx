@@ -2,14 +2,14 @@ import React from 'react';
 import { Navigate, Outlet } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 
-const AdminRoute = () => {
-    const { isAdminAuthenticated, isSuperAdminAuthenticated } = useAuth();
+const SuperAdminRoute = () => {
+    const { superAdmin, isSuperAdminAuthenticated } = useAuth();
 
-    if (!isAdminAuthenticated && !isSuperAdminAuthenticated) {
+    if (!isSuperAdminAuthenticated || superAdmin?.role !== 'superadmin') {
         return <Navigate to="/home" replace />;
     }
 
     return <Outlet />;
 };
 
-export default AdminRoute;
+export default SuperAdminRoute;

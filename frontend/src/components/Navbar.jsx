@@ -11,11 +11,19 @@ const Navbar = () => {
     const [isScrolled, setIsScrolled] = useState(false);
     const [searchQuery, setSearchQuery] = useState('');
     const navigate = useNavigate();
-    const { isAuthenticated, user, logout } = useAuth();
+    const { 
+        isAuthenticated, 
+        isAdminAuthenticated, 
+        isSuperAdminAuthenticated,
+        user, 
+        admin, 
+        superAdmin,
+        logout 
+    } = useAuth();
     
-    // Effective authentication status and user for the Navbar
-    // Strictly separate: Navbar only shows for regular user session
-    const isAnyAuthenticated = isAuthenticated;
+    // UI variables for specific areas
+    const currentSuperAdmin = superAdmin;
+    const currentAdmin = admin;
     const currentUser = user;
 
     useEffect(() => {
@@ -83,9 +91,11 @@ const Navbar = () => {
                             </InputGroup>
                         </Form>
 
-                        {/* Auth Buttons */}
-                        {isAnyAuthenticated ? (
-                            <div className="d-flex align-items-center gap-2">
+                        {/* Identity section - strictly isolated from Admin status */}
+
+                        {/* Public User Identity - Strictly isolated from Admin status */}
+                        {user ? (
+                            <div className="nav-actions-auth d-flex align-items-center gap-2">
                                 <Link to="/profile" className="icon-btn" title="Profile">
                                     <User size={20} />
                                 </Link>

@@ -49,7 +49,9 @@ const Login = () => {
             // Check if there's a destination to redirect back to
             const from = location.state?.from || '/home';
 
-            if (data.user.role === 'admin') {
+            if (data.user.role === 'superadmin') {
+                window.location.href = '/superadmin';
+            } else if (data.user.role === 'admin') {
                 window.location.href = '/admin';
             } else {
                 navigate(from);

@@ -1,7 +1,7 @@
 import jwt from 'jsonwebtoken';
 import User from '../models/User.js';
 
-const JWT_SECRET = process.env.JWT_SECRET || 'fallback_secret';
+export const JWT_SECRET = process.env.JWT_SECRET || 'fallback_secret';
 
 export const verifyToken = async (req, res, next) => {
     try {
@@ -25,10 +25,18 @@ export const verifyToken = async (req, res, next) => {
 };
 
 export const verifyAdmin = (req, res, next) => {
-    if (req.user && req.user.role === 'admin') {
+    if (req.user && (req.user.role === 'admin' || req.user.role === 'superadmin')) {
         next();
     } else {
         res.status(403).json({ message: 'Access denied: Admin only' });
+    }
+};
+
+export const verifySuperAdmin = (req, res, next) => {
+    if (req.user && req.user.role === 'superadmin') {
+        next();
+    } else {
+        res.status(403).json({ message: 'Access denied: SuperAdmin only' });
     }
 };
 

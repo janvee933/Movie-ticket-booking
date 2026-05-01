@@ -49,10 +49,15 @@ router.get('/', async (req, res) => {
     }
 });
 
-// Create Theater (Admin Only)
-router.post('/', verifyToken, verifyAdmin, async (req, res) => {
+// Create Theater (Admin/SuperAdmin)
+router.post('/', verifyToken, async (req, res) => {
     try {
-        const theater = new Theater(req.body);
+        // If not superadmin, the user becomes the owner automatically
+        const theaterData = { ...req.body };
+        if (req.user.role !== 'superadmin') {
+            theaterData.owner = req.user.id;
+        }
+        const theater = new Theater(theaterData);
         const savedTheater = await theater.save();
         res.status(201).json(savedTheater);
     } catch (error) {
@@ -60,15 +65,41 @@ router.post('/', verifyToken, verifyAdmin, async (req, res) => {
     }
 });
 
-// Update Theater (Admin Only)
-router.put('/:id', verifyToken, verifyAdmin, async (req, res) => {
+// Update Theater (Owner or SuperAdmin)
+router.put('/:id', verifyToken, async (req, res) => {
     try {
+        const theater = await Theater.findById(req.params.id);
+        if (!theater) return res.status(404).json({ message: 'Theater not found' });
+
+        // Security check: Only owner or superadmin can edit
+        if (req.user.role !== 'superadmin' && theater.owner?.toString() !== req.user.id) {
+            return res.status(403).json({ message: 'Access denied' });
+        }
+
         const updatedTheater = await Theater.findByIdAndUpdate(
             req.params.id,
             req.body,
             { new: true }
         );
         res.json(updatedTheater);
+    } catch (error) {
+        res.status(400).json({ message: error.message });
+    }
+});
+
+// Assign Owner (SuperAdmin only)
+router.patch('/:id/owner', verifyToken, async (req, res) => {
+    try {
+        if (req.user.role !== 'superadmin') {
+            return res.status(403).json({ message: 'SuperAdmin only' });
+        }
+        const { ownerId } = req.body;
+        const theater = await Theater.findByIdAndUpdate(
+            req.params.id,
+            { owner: ownerId },
+            { new: true }
+        ).populate('owner', 'name email');
+        res.json(theater);
     } catch (error) {
         res.status(400).json({ message: error.message });
     }

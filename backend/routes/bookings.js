@@ -9,7 +9,7 @@ const router = express.Router();
 // Or get user bookings if not admin (need logic branching)
 router.get('/', verifyToken, async (req, res) => {
     try {
-        if (req.user.role === 'admin') {
+        if (req.user.role === 'admin' || req.user.role === 'superadmin') {
             const bookings = await Booking.find()
                 .populate('user', 'name email')
                 .populate({

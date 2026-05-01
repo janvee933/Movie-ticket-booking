@@ -6,20 +6,25 @@ import './AdminLayout.css';
 
 const AdminLayout = () => {
     const navigate = useNavigate();
-    const { logout } = useAuth();
+    const { logout, admin, superAdmin } = useAuth();
 
     const handleLogout = () => {
         logout('admin');
-        navigate('/login');
+        navigate('/home');
     };
 
     return (
         <div className="admin-container">
             <aside className="admin-sidebar">
                 <div className="admin-logo">
-                    <h2>Admin Panel</h2>
+                    <h2>{admin?.role === 'superadmin' ? 'SuperAdmin Panel' : 'Admin Panel'}</h2>
                 </div>
                 <nav className="admin-nav">
+                    {(admin?.role === 'superadmin' || superAdmin) && (
+                        <NavLink to="/superadmin" className="admin-link superadmin-switch mb-4" style={{ background: 'rgba(255, 193, 7, 0.1)', color: '#ffc107', border: '1px solid rgba(255, 193, 7, 0.2)', fontWeight: 'bold' }}>
+                            <LayoutDashboard size={20} /> Back to SuperAdmin
+                        </NavLink>
+                    )}
                     <NavLink to="/admin" end className={({ isActive }) => `admin-link ${isActive ? 'active' : ''}`}>
                         <LayoutDashboard size={20} /> Dashboard
                     </NavLink>

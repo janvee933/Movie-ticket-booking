@@ -22,7 +22,12 @@ const theaterSchema = new mongoose.Schema({
         type: String,
         required: true
     },
-    screens: [screenSchema]
+    screens: [screenSchema],
+    owner: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'User',
+        default: null
+    }
 }, { timestamps: true });
 
 export default mongoose.model('Theater', theaterSchema);

@@ -232,17 +232,21 @@
 
 .input-with-icon svg {
     position: absolute;
-    left: 15px;
+    left: 12px;
+    top: 50%;
+    transform: translateY(-50%);
     color: var(--color-text-muted);
+    pointer-events: none;
+    z-index: 10;
 }
 
 .form-control {
     width: 100%;
-    background: rgba(0, 0, 0, 0.2);
-    border: 1px solid var(--color-border);
-    border-radius: 12px;
-    padding: 1rem 1rem 1rem 3rem;
-    /* Left padding for icon */
+    background: rgba(255, 255, 255, 0.05) !important;
+    border: 1px solid var(--color-border) !important;
+    border-radius: 12px !important;
+    padding: 12px 12px 12px 40px !important;
+    /* Extra padding for icon */
     color: var(--color-text-main);
     font-size: 1rem;
     transition: all 0.2s;
