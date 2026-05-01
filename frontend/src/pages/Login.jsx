@@ -35,8 +35,8 @@ const Login = () => {
                 data = await response.json();
             } else {
                 const text = await response.text();
-                // console.error("Server response (non-JSON):", text);
-                throw new Error("Server error: Received non-JSON response.");
+                console.error("Server returned non-JSON response:", text);
+                throw new Error(`Server error: Received non-JSON response. (Content: ${text.substring(0, 100)}...)`);
             }
 
             if (!response.ok) {
