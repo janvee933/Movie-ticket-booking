@@ -31,8 +31,13 @@ import paymentRoutes from './routes/payments.js';
 const app = express();
 // Use SERVER_PORT if available, otherwise default to 5000. 
 // We explicitly ignore PORT if it matches commonly used frontend ports like 5173 to avoid conflicts.
-const PORT = process.env.PORT || 10000;
+const PORT = process.env.PORT || 5000;
 const DB_URI = process.env.MONGO_URI;
+
+// Root route for health check and to avoid "Cannot GET /"
+app.get('/', (req, res) => {
+    res.send('Movie Ticket Booking API is running successfully!');
+});
 
 // Middleware
 app.use(cors());
