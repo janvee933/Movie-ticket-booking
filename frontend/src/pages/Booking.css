@@ -373,3 +373,33 @@ button:hover .d-hover-block {
     70% { transform: scale(1.1); }
     100% { transform: scale(1); }
 }
+
+/* New Payment Method Styles */
+.payment-method-card {
+    background: rgba(255, 255, 255, 0.03);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 12px;
+    padding: 1.25rem;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.payment-method-card:hover {
+    background: rgba(255, 255, 255, 0.06);
+    border-color: rgba(255, 255, 255, 0.2);
+}
+
+.payment-method-card.active {
+    background: rgba(59, 130, 246, 0.08);
+    border-color: #3b82f6;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
+}
+
+.method-icon {
+    width: 48px;
+    height: 48px;
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}

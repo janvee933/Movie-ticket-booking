@@ -19,7 +19,7 @@ router.post('/order', verifyToken, async (req, res) => {
         const { amount, currency = 'INR', receipt } = req.body;
 
         const options = {
-            amount: amount * 100, // Amount in paise
+            amount: Math.round(amount * 100), // Amount in paise
             currency,
             receipt: receipt || `receipt_${Date.now()}`
         };

@@ -194,7 +194,7 @@ app.get('/api/auth/me', async (req, res) => {
 });
 
 // Catch-all route to serve frontend index.html for any non-API routes
-app.get('*', (req, res) => {
+app.use((req, res) => {
     res.sendFile(path.join(frontendPath, 'index.html'));
 });
 

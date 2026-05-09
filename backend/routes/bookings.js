@@ -5,29 +5,53 @@ import { verifyToken, verifyAdmin } from '../middleware/auth.js';
 
 const router = express.Router();
 
-// Get all bookings (Admin Only)
-// Or get user bookings if not admin (need logic branching)
+// Get all user bookings or all for admin
 router.get('/', verifyToken, async (req, res) => {
     try {
-        if (req.user.role === 'admin' || req.user.role === 'superadmin') {
-            const bookings = await Booking.find()
-                .populate('user', 'name email')
-                .populate({
-                    path: 'showtime',
-                    populate: { path: 'movie theater', select: 'title name' }
-                })
-                .sort({ createdAt: -1 });
-            return res.json(bookings);
-        } else {
-            // User only sees their own
-            const bookings = await Booking.find({ user: req.user._id })
-                .populate({
-                    path: 'showtime',
-                    populate: { path: 'movie theater', select: 'title name' }
-                })
-                .sort({ createdAt: -1 });
-            return res.json(bookings);
+        let query = {};
+        if (req.user.role !== 'admin' && req.user.role !== 'superadmin') {
+            query.user = req.user._id;
         }
+
+        const bookings = await Booking.find(query)
+            .populate('user', 'name email')
+            .populate({
+                path: 'showtime',
+                populate: { 
+                    path: 'movie theater',
+                    select: 'title image genre language name location'
+                }
+            })
+            .sort({ createdAt: -1 });
+        res.json(bookings);
+    } catch (error) {
+        res.status(500).json({ message: error.message });
+    }
+});
+
+// Get single booking by ID
+router.get('/:id', verifyToken, async (req, res) => {
+    try {
+        const booking = await Booking.findById(req.params.id)
+            .populate('user', 'name email')
+            .populate({
+                path: 'showtime',
+                populate: { 
+                    path: 'movie theater',
+                    select: 'title image genre language name location'
+                }
+            });
+
+        if (!booking) {
+            return res.status(404).json({ message: 'Booking not found' });
+        }
+
+        // Check if user owns the booking or is admin
+        if (req.user.role !== 'admin' && req.user.role !== 'superadmin' && booking.user._id.toString() !== req.user._id.toString()) {
+            return res.status(403).json({ message: 'Unauthorized' });
+        }
+
+        res.json(booking);
     } catch (error) {
         res.status(500).json({ message: error.message });
     }
@@ -38,7 +62,7 @@ router.post('/', verifyToken, async (req, res) => {
     try {
         // Need to handle atomic updates for seat locking in a real app
         // Keeping it simple here
-        const { showtimeId, seats, totalAmount, paymentMethod, phoneNumber, couponCode, customerName } = req.body;
+        const { showtimeId, seats, totalAmount, paymentMethod, phoneNumber, couponCode, customerName, paymentId, orderId } = req.body;
 
         const booking = new Booking({
             customerName,
@@ -48,7 +72,8 @@ router.post('/', verifyToken, async (req, res) => {
             totalAmount,
             paymentMethod,
             phoneNumber,
-            couponCode
+            couponCode,
+            paymentId
         });
 
         await booking.save();

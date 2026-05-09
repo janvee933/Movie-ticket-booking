@@ -34,7 +34,7 @@ const bookingSchema = new mongoose.Schema({
     },
     paymentMethod: {
         type: String,
-        enum: ['cash', 'upi', 'card', 'qr', 'netbanking', 'wallet'],
+        enum: ['cash', 'upi', 'card', 'qr', 'netbanking', 'wallet', 'online'],
         required: true
     },
     phoneNumber: {

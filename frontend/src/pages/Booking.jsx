@@ -2,11 +2,13 @@ import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { ArrowLeft, Calendar, Clock, Loader as LoaderIcon, RefreshCw, Armchair, Check, Smartphone, QrCode, CreditCard, Banknote, ShieldCheck, Ticket } from 'lucide-react';
 import { Container, Row, Col, Button, Card, Spinner, Badge } from 'react-bootstrap';
+import { useAuth } from '../context/AuthContext';
 import './Booking.css';
 
 const Booking = () => {
     const { id } = useParams();
     const navigate = useNavigate();
+    const { user } = useAuth();
 
     // State Variables
     const [movie, setMovie] = useState(null);
@@ -30,7 +32,7 @@ const Booking = () => {
     const [bookingStep, setBookingStep] = useState(1); // 1: Seats, 2: Checkout
     const [customerName, setCustomerName] = useState('');
     const [phoneNumber, setPhoneNumber] = useState('');
-    const [paymentMethod, setPaymentMethod] = useState('upi'); // 'upi', 'qr', 'card', 'netbanking', 'wallet', 'cash'
+    const [paymentMethod, setPaymentMethod] = useState('online'); // 'online' (Razorpay) or 'cash'
     const [upiApp, setUpiApp] = useState('gpay');
     const [upiId, setUpiId] = useState('');
     const [isProcessing, setIsProcessing] = useState(false);
@@ -278,7 +280,10 @@ const Booking = () => {
                 })
             });
 
-            if (!orderRes.ok) throw new Error("Order creation failed");
+            if (!orderRes.ok) {
+                const errorData = await orderRes.json();
+                throw new Error(errorData.message || "Order creation failed");
+            }
             const order = await orderRes.json();
 
             // 2. Load Razorpay
@@ -291,7 +296,7 @@ const Booking = () => {
 
             // 3. Open Razorpay Checkout
             const options = {
-                key: 'rzp_test_your_key_id', // REPLACE WITH REAL KEY
+                key: import.meta.env.VITE_RAZORPAY_KEY_ID || 'rzp_test_your_key_id', // Use Env Var or Placeholder
                 amount: order.amount,
                 currency: order.currency,
                 name: "CineTicket",
@@ -353,7 +358,7 @@ const Booking = () => {
                     setPaymentStage('none');
                 },
                 prefill: {
-                    name: customerName,
+                    name: customerName || user?.name,
                     contact: phoneNumber,
                     email: user?.email || ""
                 },
@@ -372,7 +377,7 @@ const Booking = () => {
 
         } catch (error) {
             console.error("Razorpay error:", error);
-            alert("Something went wrong with Razorpay.");
+            alert(`Payment Error: ${error.message || "Something went wrong"}`);
             setIsProcessing(false);
         }
     };
@@ -577,173 +582,68 @@ const Booking = () => {
                                     <div className="d-flex justify-content-between align-items-center mb-4">
                                         <h5 className="text-uppercase fs-6 text-muted spacing-1 mb-0">Payment Method</h5>
                                         <div className="d-flex align-items-center gap-1 text-success small">
-                                            <ShieldCheck size={14} /> Secure
+                                            <ShieldCheck size={14} /> Secure Razorpay
                                         </div>
                                     </div>
 
-                                    {/* Payment Tabs */}
-                                    <div className="payment-tabs">
+                                    <div className="payment-options d-flex flex-column gap-3">
                                         <div 
-                                            className={`payment-tab ${paymentMethod === 'upi' ? 'active' : ''}`}
-                                            onClick={() => setPaymentMethod('upi')}
+                                            className={`payment-method-card ${paymentMethod !== 'cash' ? 'active' : ''}`}
+                                            onClick={() => setPaymentMethod('online')}
                                         >
-                                            <Smartphone className="tab-icon" />
-                                            <span>UPI</span>
+                                            <div className="d-flex align-items-center gap-3">
+                                                <div className="method-icon bg-primary bg-opacity-25 text-primary">
+                                                    <CreditCard size={20} />
+                                                </div>
+                                                <div className="flex-grow-1">
+                                                    <div className="fw-bold">Razorpay Secure Payment</div>
+                                                    <div className="small text-muted">UPI, Cards, Netbanking, Wallets</div>
+                                                </div>
+                                                {paymentMethod !== 'cash' && <Check size={20} className="text-primary" />}
+                                            </div>
                                         </div>
+
                                         <div 
-                                            className={`payment-tab ${paymentMethod === 'qr' ? 'active' : ''}`}
-                                            onClick={() => setPaymentMethod('qr')}
-                                        >
-                                            <QrCode className="tab-icon" />
-                                            <span>QR</span>
-                                        </div>
-                                        <div 
-                                            className={`payment-tab ${paymentMethod === 'card' ? 'active' : ''}`}
-                                            onClick={() => setPaymentMethod('card')}
-                                        >
-                                            <CreditCard className="tab-icon" />
-                                            <span>Card</span>
-                                        </div>
-                                        <div 
-                                            className={`payment-tab ${paymentMethod === 'netbanking' ? 'active' : ''}`}
-                                            onClick={() => setPaymentMethod('netbanking')}
-                                        >
-                                            <RefreshCw className="tab-icon" />
-                                            <span>Bank</span>
-                                        </div>
-                                        <div 
-                                            className={`payment-tab ${paymentMethod === 'wallet' ? 'active' : ''}`}
-                                            onClick={() => setPaymentMethod('wallet')}
-                                        >
-                                            <Ticket className="tab-icon" />
-                                            <span>Wallet</span>
-                                        </div>
-                                        <div 
-                                            className={`payment-tab ${paymentMethod === 'cash' ? 'active' : ''}`}
+                                            className={`payment-method-card ${paymentMethod === 'cash' ? 'active' : ''}`}
                                             onClick={() => setPaymentMethod('cash')}
                                         >
-                                            <Banknote className="tab-icon" />
-                                            <span>Cash</span>
+                                            <div className="d-flex align-items-center gap-3">
+                                                <div className="method-icon bg-success bg-opacity-25 text-success">
+                                                    <Banknote size={20} />
+                                                </div>
+                                                <div className="flex-grow-1">
+                                                    <div className="fw-bold">Pay at Theater</div>
+                                                    <div className="small text-muted">Pay cash at the counter</div>
+                                                </div>
+                                                {paymentMethod === 'cash' && <Check size={20} className="text-success" />}
+                                            </div>
                                         </div>
                                     </div>
 
-                                    {/* Payment Details Panel */}
-                                    <div className="payment-details-panel">
-                                        {paymentMethod === 'upi' && (
-                                            <div className="upi-section">
-                                                <div className="upi-apps" style={{ gridTemplateColumns: 'repeat(4, 1fr)' }}>
-                                                    {['gpay', 'phonepe', 'paytm', 'amazon', 'fampay', 'navi', 'whatsapp'].map(app => (
-                                                        <div 
-                                                            key={app}
-                                                            className={`upi-app-btn ${upiApp === app ? 'selected' : ''}`}
-                                                            onClick={() => setUpiApp(app)}
-                                                            style={{ padding: '0.5rem', fontSize: '0.65rem' }}
-                                                        >
-                                                            <div className="fw-bold">{
-                                                                app === 'gpay' ? 'GPay' : 
-                                                                app === 'phonepe' ? 'PhonePe' : 
-                                                                app === 'paytm' ? 'Paytm' : 
-                                                                app === 'amazon' ? 'Amazon' :
-                                                                app === 'fampay' ? 'FamPay' :
-                                                                app === 'navi' ? 'Navi' : 'WhatsApp'
-                                                            }</div>
-                                                        </div>
-                                                    ))}
-                                                </div>
-                                                <div className="form-group">
-                                                    <label className="text-muted small mb-2">Or enter UPI ID</label>
-                                                    <div className="input-group">
-                                                        <input 
-                                                            type="text" 
-                                                            className="form-control bg-dark text-white border-secondary" 
-                                                            placeholder="username@bankid" 
-                                                            value={upiId}
-                                                            onChange={(e) => setUpiId(e.target.value)}
-                                                            onKeyDown={(e) => e.key === 'Enter' && confirmBooking()}
-                                                        />
-                                                        <Button 
-                                                            variant="primary" 
-                                                            onClick={confirmBooking}
-                                                            className="px-3"
-                                                        >
-                                                            Pay
-                                                        </Button>
-                                                    </div>
-                                                </div>
+                                    <div className="mt-4 pt-3 border-top border-secondary border-opacity-25">
+                                        {paymentMethod === 'cash' ? (
+                                            <div className="text-center py-3">
+                                                <p className="small text-muted mb-4 italic">Note: Please arrive 20 minutes before the show to pay and collect your tickets.</p>
+                                                <Button 
+                                                    variant="success" 
+                                                    className="w-100 py-3 fw-bold rounded-3 shadow-lg"
+                                                    onClick={confirmBooking}
+                                                    disabled={isProcessing}
+                                                >
+                                                    {isProcessing ? <Spinner size="sm" className="me-2" /> : 'Confirm Booking (Cash)'}
+                                                </Button>
                                             </div>
-                                        )}
-
-                                        {paymentMethod === 'qr' && (
-                                            <div className="text-center">
-                                                <p className="small text-muted mb-3">Scan this QR code using any UPI app</p>
-                                                <div className="qr-container">
-                                                    <img src="https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=example" alt="Scan QR" className="qr-code-img" />
-                                                </div>
-                                                <div className="payment-timer fw-bold">Expires in: 04:59</div>
-                                            </div>
-                                        )}
-
-                                        {paymentMethod === 'card' && (
-                                            <div className="card-section">
-                                                <div className="visa-card-mock">
-                                                    <div className="d-flex justify-content-between align-items-start">
-                                                        <div className="fw-bold fs-4 italic text-white">VISA</div>
-                                                        <div className="small opacity-75">Debit Card</div>
-                                                    </div>
-                                                    <div className="fs-5 tracking-widest text-white py-2">**** **** **** 4242</div>
-                                                    <div className="d-flex justify-content-between align-items-end">
-                                                        <div className="small">CARD HOLDER</div>
-                                                        <div className="small">EXPIRES</div>
-                                                    </div>
-                                                </div>
-                                                <div className="card-form-grid">
-                                                    <div className="form-group col-span-2 mb-3" style={{ gridColumn: 'span 2' }}>
-                                                        <input className="form-control bg-dark text-white border-secondary" placeholder="Card Number" />
-                                                    </div>
-                                                    <div className="form-group mb-0">
-                                                        <input className="form-control bg-dark text-white border-secondary" placeholder="MM/YY" />
-                                                    </div>
-                                                    <div className="form-group mb-0">
-                                                        <input className="form-control bg-dark text-white border-secondary" placeholder="CVV" />
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        )}
-
-                                        {paymentMethod === 'netbanking' && (
-                                            <div className="net-banking-section">
-                                                <p className="small text-muted mb-3">Select your bank</p>
-                                                <div className="grid" style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '0.75rem' }}>
-                                                    {['SBI', 'HDFC', 'ICICI', 'Axis', 'Kotak', 'PNB'].map(bank => (
-                                                        <div key={bank} className="p-2 border border-secondary border-opacity-25 rounded-2 cursor-pointer text-center hover-border-primary" style={{ fontSize: '0.8rem' }}>
-                                                            {bank}
-                                                        </div>
-                                                    ))}
-                                                </div>
-                                            </div>
-                                        )}
-
-                                        {paymentMethod === 'wallet' && (
-                                            <div className="wallet-section">
-                                                <p className="small text-muted mb-3">Popular Wallets</p>
-                                                <div className="d-flex flex-column gap-2">
-                                                    {['Amazon Pay', 'Mobikwik', 'Freecharge', 'JioMoney'].map(wallet => (
-                                                        <div key={wallet} className="d-flex justify-content-between p-2 border border-secondary border-opacity-25 rounded-2 cursor-pointer align-items-center">
-                                                            <span style={{ fontSize: '0.85rem' }}>{wallet}</span>
-                                                            <ArrowLeft size={14} style={{ transform: 'rotate(180deg)' }} />
-                                                        </div>
-                                                    ))}
-                                                </div>
-                                            </div>
-                                        )}
-
-                                        {paymentMethod === 'cash' && (
-                                            <div className="text-center py-4">
-                                                <div className="mb-3">
-                                                    <Banknote size={40} className="text-success opacity-50" />
-                                                </div>
-                                                <h6>Pay at Counter</h6>
-                                                <p className="small text-muted px-4">Pay cash at the theater box office 20 minutes before the show start time.</p>
+                                        ) : (
+                                            <div className="text-center py-3">
+                                                <p className="small text-muted mb-4 italic">You will be redirected to Razorpay's secure payment gateway.</p>
+                                                <Button 
+                                                    variant="primary" 
+                                                    className="w-100 py-3 fw-bold rounded-3 shadow-lg d-flex align-items-center justify-content-center gap-2"
+                                                    onClick={confirmBooking}
+                                                    disabled={isProcessing}
+                                                >
+                                                    {isProcessing ? <Spinner size="sm" /> : <><ShieldCheck size={20} /> Pay Now with Razorpay</>}
+                                                </Button>
                                             </div>
                                         )}
                                     </div>
