@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { User, LogOut, Mail, Edit2, Save, X, Calendar, MapPin, Clock, Camera, Ticket, LayoutDashboard } from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
+import { API_URL } from '../utils/api';
 import './Profile.css';
 
 const Profile = () => {
@@ -32,7 +33,7 @@ const Profile = () => {
             // Fetch Bookings
             const fetchBookings = async () => {
                 try {
-                    const res = await fetch('/api/bookings', {
+                    const res = await fetch(`${API_URL}/api/bookings`, {
                         headers: {
                             'Authorization': `Bearer ${currentToken}`
                         }
@@ -74,7 +75,7 @@ const Profile = () => {
                 data.append('profileImage', formData.profileImage);
             }
 
-            const res = await fetch('/api/users/profile', {
+            const res = await fetch(`${API_URL}/api/users/profile`, {
                 method: 'PUT',
                 headers: { 'Authorization': `Bearer ${token}` },
                 body: data

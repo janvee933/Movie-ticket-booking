@@ -5,6 +5,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 import ReviewSection from '../components/ReviewSection';
 import TrailerModal from '../components/TrailerModal';
 import useBooking from '../hooks/useBooking';
+import { API_URL } from '../utils/api';
 import './MovieDetails.css';
 
 const MovieDetails = () => {
@@ -17,7 +18,7 @@ const MovieDetails = () => {
     useEffect(() => {
         const fetchMovie = async () => {
             try {
-                const res = await fetch(`/api/movies/${id}`);
+                const res = await fetch(`${API_URL}/api/movies/${id}`);
                 if (res.ok) {
                     const data = await res.json();
                     setMovie(data);

@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { Link, useNavigate, useLocation } from 'react-router-dom';
 import { Mail, Lock, User, ArrowLeft, Eye, EyeOff, Facebook } from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
+import { API_URL } from '../utils/api';
 import './Login.css';
 
 const Signup = () => {
@@ -27,7 +28,7 @@ const Signup = () => {
 
         setLoading(true);
         try {
-            const response = await fetch('/api/auth/signup', {
+            const response = await fetch(`${API_URL}/api/auth/signup`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',

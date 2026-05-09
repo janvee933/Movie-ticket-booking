@@ -4,6 +4,7 @@ import { Play, Star, Calendar, Clock, Info, ArrowRight } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 import { Container, Row, Col, Button, Badge } from 'react-bootstrap';
 import useBooking from '../hooks/useBooking';
+import { API_URL } from '../utils/api';
 
 import MovieSection from '../components/MovieSection';
 import RecommendedMovies from '../components/RecommendedMovies';
@@ -19,7 +20,7 @@ const Home = () => {
     useEffect(() => {
         const fetchMovies = async () => {
             try {
-                const res = await fetch('/api/movies');
+                const res = await fetch(`${API_URL}/api/movies`);
                 const data = await res.json();
                 setMovies(data);
                 setLoading(false);

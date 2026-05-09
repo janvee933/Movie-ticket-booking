@@ -3,6 +3,7 @@ import { useParams, useNavigate } from 'react-router-dom';
 import { ArrowLeft, Calendar, Clock, Loader as LoaderIcon, RefreshCw, Armchair, Check, Smartphone, QrCode, CreditCard, Banknote, ShieldCheck, Ticket } from 'lucide-react';
 import { Container, Row, Col, Button, Card, Spinner, Badge } from 'react-bootstrap';
 import { useAuth } from '../context/AuthContext';
+import { API_URL } from '../utils/api';
 import './Booking.css';
 
 const Booking = () => {
@@ -58,13 +59,13 @@ const Booking = () => {
         const fetchData = async () => {
             try {
                 // Fetch Movie Details
-                const movieRes = await fetch(`/api/movies/${id}`);
+                const movieRes = await fetch(`${API_URL}/api/movies/${id}`);
                 if (!movieRes.ok) throw new Error("Failed to fetch movie details");
                 const movieData = await movieRes.json();
                 setMovie(movieData);
 
                 // Fetch Showtimes
-                const showtimesRes = await fetch(`/api/showtimes?movie=${id}`);
+                const showtimesRes = await fetch(`${API_URL}/api/showtimes?movie=${id}`);
                 if (!showtimesRes.ok) throw new Error("Failed to fetch showtimes");
                 const showtimesData = await showtimesRes.json();
                 setShowtimes(showtimesData);
@@ -95,7 +96,7 @@ const Booking = () => {
         const pollInterval = setInterval(async () => {
             if (bookingStep === 1) { // Only poll when on selection screen
                 try {
-                    const res = await fetch(`/api/showtimes?movie=${id}`);
+                    const res = await fetch(`${API_URL}/api/showtimes?movie=${id}`);
                     if (res.ok) {
                         const data = await res.json();
                         setShowtimes(data);
@@ -117,7 +118,7 @@ const Booking = () => {
         if (isRefreshing) return;
         setIsRefreshing(true);
         try {
-            const showtimesRes = await fetch(`/api/showtimes?movie=${id}`);
+            const showtimesRes = await fetch(`${API_URL}/api/showtimes?movie=${id}`);
             if (!showtimesRes.ok) throw new Error("Failed to fetch showtimes");
             const showtimesData = await showtimesRes.json();
             setShowtimes(showtimesData);
@@ -187,7 +188,7 @@ const Booking = () => {
         
         try {
             const token = localStorage.getItem('token');
-            const res = await fetch('/api/offers/validate', {
+            const res = await fetch(`${API_URL}/api/offers/validate`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
@@ -267,7 +268,7 @@ const Booking = () => {
             const totalAmount = calculateTotal();
 
             // 1. Create Order on Backend
-            const orderRes = await fetch('/api/payments/order', {
+            const orderRes = await fetch(`${API_URL}/api/payments/order`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
@@ -307,7 +308,7 @@ const Booking = () => {
                     setPaymentStage('verifying');
                     
                     // Verify payment on backend
-                    const verifyRes = await fetch('/api/payments/verify', {
+                    const verifyRes = await fetch(`${API_URL}/api/payments/verify`, {
                         method: 'POST',
                         headers: {
                             'Content-Type': 'application/json',
@@ -326,7 +327,7 @@ const Booking = () => {
                         setPaymentStage('success');
                         
                         // Finalize Booking
-                        const bookingRes = await fetch('/api/bookings', {
+                        const bookingRes = await fetch(`${API_URL}/api/bookings`, {
                             method: 'POST',
                             headers: {
                                 'Content-Type': 'application/json',

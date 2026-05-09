@@ -1,4 +1,5 @@
 import React, { createContext, useContext, useState, useEffect } from 'react';
+import { API_URL } from '../utils/api';
 
 const AuthContext = createContext();
 
@@ -52,7 +53,7 @@ export const AuthProvider = ({ children }) => {
                 if (!session.token) continue;
 
                 try {
-                    const res = await fetch('/api/auth/me', {
+                    const res = await fetch(`${API_URL}/api/auth/me`, {
                         headers: { 'Authorization': `Bearer ${session.token}` }
                     });
 

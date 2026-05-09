@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { Star, User } from 'lucide-react';
+import { API_URL } from '../utils/api';
 import './ReviewSection.css';
 
 const ReviewSection = ({ movieId, reviews = [], onReviewAdded }) => {
@@ -20,7 +21,7 @@ const ReviewSection = ({ movieId, reviews = [], onReviewAdded }) => {
             const token = localStorage.getItem('token');
             if (!token) throw new Error('You must be logged in to review.');
 
-            const res = await fetch(`/api/movies/${movieId}/reviews`, {
+            const res = await fetch(`${API_URL}/api/movies/${movieId}/reviews`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',

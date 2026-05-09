@@ -3,6 +3,7 @@ import { Link, useSearchParams } from 'react-router-dom';
 import { Search, Filter, Globe, Star } from 'lucide-react';
 import { Container, Row, Col, Card, Button, Form, Badge, InputGroup } from 'react-bootstrap';
 import useBooking from '../hooks/useBooking';
+import { API_URL } from '../utils/api';
 import './Movies.css';
 
 const Movies = () => {
@@ -23,7 +24,7 @@ const Movies = () => {
     useEffect(() => {
         const fetchMovies = async () => {
             try {
-                const res = await fetch('/api/movies');
+                const res = await fetch(`${API_URL}/api/movies`);
                 const data = await res.json();
                 setMovies(data);
                 setLoading(false);
