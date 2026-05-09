@@ -227,8 +227,12 @@ const Profile = () => {
                                                         <span>Total Paid</span>
                                                         <strong>₹{booking.totalAmount}</strong>
                                                     </div>
-                                                    <button className="btn-download" title="Download Ticket">
-                                                        Download
+                                                    <button 
+                                                        className="btn-download" 
+                                                        title="View Ticket"
+                                                        onClick={() => navigate(`/booking-success/${booking._id}`)}
+                                                    >
+                                                        View Ticket
                                                     </button>
                                                 </div>
                                                 {/* Decorative jagged edge */}

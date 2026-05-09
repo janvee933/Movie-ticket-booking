@@ -4,6 +4,7 @@ import { Link } from 'react-router-dom';
 import { Card, Row, Col, Table, Button } from 'react-bootstrap';
 import { AreaChart, Area, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, PieChart, Pie, Cell } from 'recharts';
 import { useAuth } from '../../context/AuthContext';
+import { API_URL } from '../../utils/api';
 import './AdminPages.css';
 
 const AdminDashboard = () => {
@@ -18,7 +19,7 @@ const AdminDashboard = () => {
                 const token = adminToken || localStorage.getItem('admin_token');
                 
                 // Fetch basic stats
-                const statsRes = await fetch('/api/admin/stats', {
+                const statsRes = await fetch(`${API_URL}/api/admin/stats`, {
                     headers: { 'Authorization': `Bearer ${token}` }
                 });
                 if (statsRes.ok) {
@@ -27,7 +28,7 @@ const AdminDashboard = () => {
                 }
 
                 // Fetch chart data
-                const revRes = await fetch('/api/admin/revenue-stats', {
+                const revRes = await fetch(`${API_URL}/api/admin/revenue-stats`, {
                     headers: { 'Authorization': `Bearer ${token}` }
                 });
                 if (revRes.ok) {

@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { Gift, Zap, Calendar, Copy, Check, Sparkles } from 'lucide-react';
+import { API_URL } from '../utils/api';
 import './Offers.css';
 
 const Offers = () => {
@@ -11,7 +12,7 @@ const Offers = () => {
     React.useEffect(() => {
         const fetchOffers = async () => {
             try {
-                const res = await fetch('/api/offers');
+                const res = await fetch(`${API_URL}/api/offers`);
                 if (res.ok) {
                     const data = await res.json();
                     setOffers(data);

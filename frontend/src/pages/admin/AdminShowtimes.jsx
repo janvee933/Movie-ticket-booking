@@ -2,6 +2,7 @@ import React, { useState, useEffect, useCallback } from 'react';
 import { Plus, Trash2, Calendar, Clock, MapPin, X, Armchair, Info } from 'lucide-react';
 import { Modal, Button } from 'react-bootstrap';
 import { useAuth } from '../../context/AuthContext';
+import { API_URL } from '../../utils/api';
 import './AdminPages.css';
 
 const AdminShowtimes = () => {
@@ -27,9 +28,9 @@ const AdminShowtimes = () => {
     const fetchData = useCallback(async () => {
         try {
             const [showtimesRes, moviesRes, theatersRes] = await Promise.all([
-                fetch('/api/showtimes'),
-                fetch('/api/movies'),
-                fetch('/api/theaters')
+                fetch(`${API_URL}/api/showtimes`),
+                fetch(`${API_URL}/api/movies`),
+                fetch(`${API_URL}/api/theaters`)
             ]);
 
             const stData = await showtimesRes.json();
@@ -58,7 +59,7 @@ const AdminShowtimes = () => {
         
         try {
             const token = adminToken || superAdminToken || localStorage.getItem('admin_token') || localStorage.getItem('superadmin_token');
-            const res = await fetch(`/api/admin/showtimes/${show._id}/seats`, {
+            const res = await fetch(`${API_URL}/api/admin/showtimes/${show._id}/seats`, {
                 headers: { 'Authorization': `Bearer ${token}` }
             });
             const data = await res.json();
@@ -86,7 +87,7 @@ const AdminShowtimes = () => {
         };
 
         try {
-            await fetch('/api/showtimes', {
+            await fetch(`${API_URL}/api/showtimes`, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${token}` },
                 body: JSON.stringify(payload)
@@ -101,7 +102,7 @@ const AdminShowtimes = () => {
     const handleDelete = async (id) => {
         if (window.confirm('Delete this showtime?')) {
             const token = adminToken || localStorage.getItem('admin_token');
-            await fetch(`/api/showtimes/${id}`, {
+            await fetch(`${API_URL}/api/showtimes/${id}`, {
                 method: 'DELETE',
                 headers: { 'Authorization': `Bearer ${token}` }
             });

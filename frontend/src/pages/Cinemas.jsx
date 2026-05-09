@@ -1,6 +1,7 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import { MapPin, Star, AlertCircle } from 'lucide-react';
+import { API_URL } from '../utils/api';
 // import { cinemas } from '../data/cinemas'; // Removed static data
 import './Cinemas.css';
 
@@ -12,7 +13,7 @@ const Cinemas = () => {
     React.useEffect(() => {
         const fetchCinemas = async () => {
             try {
-                const res = await fetch('/api/theaters/showtimes');
+                const res = await fetch(`${API_URL}/api/theaters/showtimes`);
                 if (!res.ok) throw new Error("Failed to fetch cinemas data");
                 const data = await res.json();
                 setCinemas(data);

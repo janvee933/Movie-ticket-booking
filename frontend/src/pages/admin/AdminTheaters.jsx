@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import { Plus, Trash2, X, MapPin, Edit2, Monitor, LayoutGrid } from 'lucide-react';
 import { useAuth } from '../../context/AuthContext';
+import { API_URL } from '../../utils/api';
 import './AdminPages.css';
 
 const AdminTheaters = () => {
@@ -18,7 +19,7 @@ const AdminTheaters = () => {
 
     const fetchTheaters = useCallback(async () => {
         try {
-            const res = await fetch('/api/theaters');
+            const res = await fetch(`${API_URL}/api/theaters`);
             const data = await res.json();
             setTheaters(data);
             setLoading(false);
@@ -35,7 +36,7 @@ const AdminTheaters = () => {
     const handleDelete = async (id) => {
         if (window.confirm('Delete this theater?')) {
             const token = adminToken || localStorage.getItem('admin_token');
-            await fetch(`/api/theaters/${id}`, {
+            await fetch(`${API_URL}/api/theaters/${id}`, {
                 method: 'DELETE',
                 headers: { 'Authorization': `Bearer ${token}` }
             });
@@ -56,7 +57,7 @@ const AdminTheaters = () => {
             }))
         };
 
-        const url = formData._id ? `/api/theaters/${formData._id}` : '/api/theaters';
+        const url = formData._id ? `${API_URL}/api/theaters/${formData._id}` : `${API_URL}/api/theaters`;
         const method = formData._id ? 'PUT' : 'POST';
 
         await fetch(url, {

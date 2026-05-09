@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { AreaChart, Area, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, BarChart, Bar, Cell } from 'recharts';
 import { DollarSign, BookOpen, Film, TrendingUp, Download, Calendar } from 'lucide-react';
 import { useAuth } from '../../context/AuthContext';
+import { API_URL } from '../../utils/api';
 import './AdminPages.css';
 
 const AdminReports = () => {
@@ -15,7 +16,7 @@ const AdminReports = () => {
             try {
                 const token = superAdminToken || adminToken || localStorage.getItem('superadmin_token') || localStorage.getItem('admin_token');
                 // Fetch chart data
-                const revRes = await fetch('/api/admin/revenue-stats', {
+                const revRes = await fetch(`${API_URL}/api/admin/revenue-stats`, {
                     headers: { 'Authorization': `Bearer ${token}` }
                 });
                 const revData = await revRes.json();
@@ -26,7 +27,7 @@ const AdminReports = () => {
                 })));
 
                 // Fetch general stats for consistency
-                const statsRes = await fetch('/api/admin/stats', {
+                const statsRes = await fetch(`${API_URL}/api/admin/stats`, {
                     headers: { 'Authorization': `Bearer ${token}` }
                 });
                 const statsData = await statsRes.json();

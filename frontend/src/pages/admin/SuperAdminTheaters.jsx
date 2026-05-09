@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { Monitor, UserPlus, Shield, MapPin, Search, Calendar, CheckCircle, Clock } from 'lucide-react';
 import { Row, Col, Card, Badge, Button, Form, Modal } from 'react-bootstrap';
 import { useAuth } from '../../context/AuthContext';
+import { API_URL } from '../../utils/api';
 import './AdminPages.css';
 
 const SuperAdminTheaters = () => {
@@ -18,7 +19,7 @@ const SuperAdminTheaters = () => {
 
     const fetchSchedule = async (theaterId) => {
         try {
-            const res = await fetch(`/api/showtimes?theater=${theaterId}`);
+            const res = await fetch(`${API_URL}/api/showtimes?theater=${theaterId}`);
             const data = await res.json();
             setTheaterSchedule(data);
             setIsScheduleModalOpen(true);
@@ -31,8 +32,8 @@ const SuperAdminTheaters = () => {
         try {
             const token = superAdminToken || localStorage.getItem('superadmin_token');
             const [theatersRes, usersRes] = await Promise.all([
-                fetch('/api/theaters', { headers: { 'Authorization': `Bearer ${token}` } }),
-                fetch('/api/users', { headers: { 'Authorization': `Bearer ${token}` } })
+                fetch(`${API_URL}/api/theaters`, { headers: { 'Authorization': `Bearer ${token}` } }),
+                fetch(`${API_URL}/api/users`, { headers: { 'Authorization': `Bearer ${token}` } })
             ]);
 
             const theatersData = await theatersRes.json();
@@ -55,7 +56,7 @@ const SuperAdminTheaters = () => {
         if (!selectedAdminId) return;
         try {
             const token = superAdminToken || localStorage.getItem('superadmin_token');
-            const res = await fetch(`/api/theaters/${selectedTheater._id}/owner`, {
+            const res = await fetch(`${API_URL}/api/theaters/${selectedTheater._id}/owner`, {
                 method: 'PATCH',
                 headers: { 
                     'Authorization': `Bearer ${token}`,

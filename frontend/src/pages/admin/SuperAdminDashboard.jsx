@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { Users, UserCog, Shield, TrendingUp, AlertTriangle } from 'lucide-react';
 import { Row, Col, Card, Button } from 'react-bootstrap';
 import { useAuth } from '../../context/AuthContext';
+import { API_URL } from '../../utils/api';
 import '../admin/AdminPages.css';
 
 const SuperAdminDashboard = () => {
@@ -13,7 +14,7 @@ const SuperAdminDashboard = () => {
         const fetchSystemStats = async () => {
             try {
                 const token = superAdminToken || adminToken || localStorage.getItem('superadmin_token') || localStorage.getItem('admin_token');
-                const res = await fetch('/api/admin/stats', {
+                const res = await fetch(`${API_URL}/api/admin/stats`, {
                     headers: { 'Authorization': `Bearer ${token}` }
                 });
                 if (res.ok) {

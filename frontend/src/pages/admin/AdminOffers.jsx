@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import { Plus, Edit2, Trash2, X, Search, Tag, Percent } from 'lucide-react';
 import { useAuth } from '../../context/AuthContext';
+import { API_URL } from '../../utils/api';
 import './AdminPages.css';
 
 const AdminOffers = () => {
@@ -20,7 +21,7 @@ const AdminOffers = () => {
 
     const fetchOffers = useCallback(async () => {
         try {
-            const res = await fetch('/api/offers?all=true'); // Fetch all including inactive if needed
+            const res = await fetch(`${API_URL}/api/offers?all=true`); // Fetch all including inactive if needed
             const data = await res.json();
             setOffers(data);
             setLoading(false);
@@ -38,7 +39,7 @@ const AdminOffers = () => {
         if (window.confirm('Are you sure you want to delete this offer?')) {
             try {
                 const token = adminToken || localStorage.getItem('admin_token');
-                const res = await fetch(`/api/offers/${id}`, {
+                const res = await fetch(`${API_URL}/api/offers/${id}`, {
                     method: 'DELETE',
                     headers: { 'Authorization': `Bearer ${token}` }
                 });
@@ -54,7 +55,7 @@ const AdminOffers = () => {
     const handleSubmit = async (e) => {
         e.preventDefault();
         const token = adminToken || localStorage.getItem('admin_token');
-        const url = formData._id ? `/api/offers/${formData._id}` : '/api/offers';
+        const url = formData._id ? `${API_URL}/api/offers/${formData._id}` : `${API_URL}/api/offers`;
         const method = formData._id ? 'PUT' : 'POST';
 
         try {

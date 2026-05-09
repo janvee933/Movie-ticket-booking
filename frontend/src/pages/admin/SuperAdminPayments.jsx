@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { CreditCard, RefreshCcw, Search, Filter, CheckCircle, XCircle, Download, MoreVertical } from 'lucide-react';
 import { Row, Col, Card, Badge, Button, Table, Dropdown } from 'react-bootstrap';
 import { useAuth } from '../../context/AuthContext';
+import { API_URL } from '../../utils/api';
 import './AdminPages.css';
 
 const SuperAdminPayments = () => {
@@ -13,7 +14,7 @@ const SuperAdminPayments = () => {
     const fetchPayments = async () => {
         try {
             const token = superAdminToken || localStorage.getItem('superadmin_token');
-            const res = await fetch('/api/admin/bookings', {
+            const res = await fetch(`${API_URL}/api/admin/bookings`, {
                 headers: { 'Authorization': `Bearer ${token}` }
             });
             const data = await res.json();
@@ -33,7 +34,7 @@ const SuperAdminPayments = () => {
         if (!window.confirm('Are you sure you want to process a refund for this booking?')) return;
         try {
             const token = superAdminToken || localStorage.getItem('superadmin_token');
-            const res = await fetch(`/api/admin/bookings/${bookingId}/refund`, {
+            const res = await fetch(`${API_URL}/api/admin/bookings/${bookingId}/refund`, {
                 method: 'POST',
                 headers: { 'Authorization': `Bearer ${token}` }
             });

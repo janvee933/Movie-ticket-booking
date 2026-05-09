@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import { Plus, Edit2, Trash2, X, Search, Film, Star } from 'lucide-react';
 import { useAuth } from '../../context/AuthContext';
+import { API_URL } from '../../utils/api';
 import './AdminPages.css';
 
 const AdminMovies = () => {
@@ -24,7 +25,7 @@ const AdminMovies = () => {
 
     const fetchMovies = useCallback(async () => {
         try {
-            const res = await fetch('/api/movies');
+            const res = await fetch(`${API_URL}/api/movies`);
             const data = await res.json();
             setMovies(data);
             setLoading(false);
@@ -42,7 +43,7 @@ const AdminMovies = () => {
         if (window.confirm('Are you sure you want to delete this movie?')) {
             try {
                 const token = adminToken || localStorage.getItem('admin_token');
-                const res = await fetch(`/api/movies/${id}`, {
+                const res = await fetch(`${API_URL}/api/movies/${id}`, {
                     method: 'DELETE',
                     headers: { 'Authorization': `Bearer ${token}` }
                 });
@@ -58,7 +59,7 @@ const AdminMovies = () => {
     const handleSubmit = async (e) => {
         e.preventDefault();
         const token = adminToken || localStorage.getItem('admin_token');
-        const url = formData._id ? `/api/movies/${formData._id}` : '/api/movies';
+        const url = formData._id ? `${API_URL}/api/movies/${formData._id}` : `${API_URL}/api/movies`;
         const method = formData._id ? 'PUT' : 'POST';
 
         const data = new FormData();

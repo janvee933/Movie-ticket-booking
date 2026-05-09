@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Check, X, Search, Calendar, User, Film, MapPin } from 'lucide-react';
 import { useAuth } from '../../context/AuthContext';
+import { API_URL } from '../../utils/api';
 import './AdminPages.css';
 
 const AdminBookings = () => {
@@ -16,7 +17,7 @@ const AdminBookings = () => {
     const fetchBookings = async () => {
         const token = adminToken || superAdminToken || localStorage.getItem('admin_token') || localStorage.getItem('superadmin_token');
         try {
-            const res = await fetch('/api/bookings', {
+            const res = await fetch(`${API_URL}/api/bookings`, {
                 headers: { 'Authorization': `Bearer ${token}` }
             });
             const data = await res.json();

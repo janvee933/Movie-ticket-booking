@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Search, UserX, UserCheck, Mail, Calendar } from 'lucide-react';
 import { useAuth } from '../../context/AuthContext';
+import { API_URL } from '../../utils/api';
 import './AdminPages.css';
 
 const AdminUsers = () => {
@@ -14,7 +15,7 @@ const AdminUsers = () => {
     const fetchUsers = async () => {
         try {
             const token = isSuperAdmin ? (superAdminToken || localStorage.getItem('superadmin_token')) : (adminToken || localStorage.getItem('admin_token'));
-            const endpoint = isSuperAdmin ? '/api/users' : '/api/admin/users';
+            const endpoint = isSuperAdmin ? `${API_URL}/api/users` : `${API_URL}/api/admin/users`;
             const res = await fetch(endpoint, {
                 headers: { 'Authorization': `Bearer ${token}` }
             });
@@ -35,7 +36,7 @@ const AdminUsers = () => {
         try {
             const token = isSuperAdmin ? (superAdminToken || localStorage.getItem('superadmin_token')) : (adminToken || localStorage.getItem('admin_token'));
             const newStatus = currentStatus === 'blocked' ? 'active' : 'blocked';
-            const endpoint = isSuperAdmin ? `/api/users/${id}/status` : `/api/admin/users/${id}/status`;
+            const endpoint = isSuperAdmin ? `${API_URL}/api/users/${id}/status` : `${API_URL}/api/admin/users/${id}/status`;
             const method = isSuperAdmin ? 'PUT' : 'PATCH';
 
             const res = await fetch(endpoint, {
@@ -58,7 +59,7 @@ const AdminUsers = () => {
         if (!isSuperAdmin) return;
         try {
             const token = isSuperAdmin ? (superAdminToken || localStorage.getItem('superadmin_token')) : (adminToken || localStorage.getItem('admin_token'));
-            const res = await fetch(`/api/users/${id}/role`, {
+            const res = await fetch(`${API_URL}/api/users/${id}/role`, {
                 method: 'PUT',
                 headers: { 
                     'Authorization': `Bearer ${token}`,
